@@ -2,7 +2,6 @@ This module explains how to build a Programmable 1-bit ALU. In computing, an ari
 
 <img src="images/ALU_symbol.png">
 
-ALU
 
 Most ALUs can perform the following operations:
 Bitwise logic operations (AND, NOT, OR, XOR)
