@@ -42,12 +42,11 @@
                     <div class="v-instruction-text" id="task-description">
                         Simulation of a circuit made for 1-bit ALU
                     </div>
-                    <p>Refer to the given state diagram to understand the circuit</p>
-                    <p>There are two input streams X and Y</p>
                     <p>Start- Starts the simulation. Default speed is 1x. Select the speed through dropdown menu</p>
                     <p>Reset - Resets the simulation</p>
-                    <p>There is a clock which can be started by the user but it's cycle cannot be controlled.</p>
-                    <p>There is one output(A) </p>
+                    <p>There are 5 inputs(A,B,Cin,S1 and S2) to be set by the user</p>
+                    <p>The mux calculates sum when s1=0 and s2=0, and when s1=0 ans s2=1, or when s1=1 and s2=0 and xor when s1=1 and s2=1</p>
+                    <p>There are 2 outputs(Cout and F) </p>
                 </div>
             </div>
         </div>
@@ -77,10 +76,9 @@
                     <path fill="#29e" stroke="currentColor" stroke-width="3"
                     d="M 200 265 v 50 h 50 Q 275 290 250 265 h -50" />
                 </g>
-                <g id="nor">
+                <g id="or">
                     <path stroke="currentColor" fill="#29e" stroke-width="3"
                         d="M 195 360 M 200 360 Q 235 395 200 430 Q 305 395 200 360" />
-                    <circle fill="#29e" stroke="currentColor" stroke-width="3" cx="262" cy="395" r="7" />
                 </g>
                 <g id="xor">
                     <path stroke="currentColor" fill="#29e" stroke-width="3"
@@ -90,19 +88,19 @@
                     <path stroke="currentColor" fill="#29e" stroke-width="3"
                     d="m 500,200 0,0 65,65 0,120 -65,70 z"/>
                 </g>
-                <circle id="inputa" cx="50" cy="110" r="10"
+                <circle id="inputa" cx="50" cy="110" r="10" onclick="appendInputA()"
                         style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="inputb" cx="100" cy="110" r="10"
+                <circle id="inputb" cx="100" cy="110" r="10" onclick="appendInputB()"
                         style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="inputc" cx="250" cy="110" r="10"
+                <circle id="cin" cx="250" cy="110" r="10" onclick="appendInputCin()"
                         style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="outputc" cx="680" cy="170" r="10"
+                <circle id="cout" cx="680" cy="170" r="10"
                         style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
                 <circle id="outputf" cx="680" cy="350" r="10"
                         style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="inputm1" cx="520" cy="120" r="10"
+                <circle id="inputs1" cx="520" cy="120" r="10" onclick="appendInputS1()"
                         style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="inputm2" cx="550" cy="120" r="10"
+                <circle id="inputs2" cx="550" cy="120" r="10" onclick="appendInputS2()"
                         style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
                 <!-- from A0 to full-adder -->
                 <path id="path1" fill="none" stroke="currentColor" stroke-width="3"
@@ -110,7 +108,7 @@
                 <!-- from A0 to and -->
                 <path id="path2" fill="none" stroke="currentColor" stroke-width="3"
                         d="M 50 120  L 50 310 L 200 310" />
-                <!-- from A0 to nor -->
+                <!-- from A0 to or -->
                 <path id="path3" fill="none" stroke="currentColor" stroke-width="3"
                         d="M 50 120  L 50 410 L 210 410" />
                 <!-- from A0 to xor -->
@@ -122,7 +120,7 @@
                 <!-- from B0 to and -->
                 <path id="path6" fill="none" stroke="currentColor" stroke-width="3"
                         d="M 100 120  L 100 290 L 200 290" />
-                <!-- from B0 to nor -->
+                <!-- from B0 to or -->
                 <path id="path7" fill="none" stroke="currentColor" stroke-width="3"
                         d="M 100 120  L 100 390 L 215 390" />
                 <!-- from B0 to xor -->
@@ -140,9 +138,9 @@
                 <!-- from and to mux -->
                 <path id="path12" fill="none" stroke="currentColor" stroke-width="3"
                         d="M 264 290  L 500 290"/>
-                <!-- from nor to mux -->
+                <!-- from or to mux -->
                 <path id="path13" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 266 390 L 300 390 L 300 340 L 500 340"/>
+                        d="M 254 394 L 300 394 L 300 340 L 500 340"/>
                 <!-- from xor to mux -->
                 <path id="path14" fill="none" stroke="currentColor" stroke-width="3"
                         d="M 256 505 L 350 505 L 350 390 L 500 390"/>
@@ -164,7 +162,6 @@
                 <text font-size="1.5em" x="535" y="110" fill="black">S2</text>
                 <text font-size="1.2em" x="210" y="210" fill="black">Full Adder</text>
                 <text font-size="1em" x="500" y="320" fill="black">4*1 MUX</text>
-
                 </svg>               
             </div>
         </div>
