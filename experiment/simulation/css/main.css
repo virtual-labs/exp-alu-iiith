@@ -82,6 +82,24 @@ text {
   text-align: center;
 }
 
+.mux {
+  background-color: #29e;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mux:after {
+  content: "4*1 Mux";
+  margin: auto;
+  padding: 1.2rem 0rem;
+  font-weight: bold;
+  font-size: 1rem;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  text-align: center;
+}
+
 .container {
   margin-top: 1%;
 }
