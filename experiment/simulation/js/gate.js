@@ -6,7 +6,8 @@ import {
     computeXor,
     computeXnor,
     computeNand,
-    computeNor
+    computeNor,
+    validateAlu
 } from "./validator.js";
 import { getOutputMux } from "./mux.js";
 'use strict';
@@ -46,7 +47,16 @@ export class Gate {
 
     // Removes input from the gate
     removeInput(gate) {
-        let index = this.inputs.indexOf(gate);
+        let index = -1;
+        let i = 0;
+        for (let input in this.inputs) {
+            if (this.inputs[input][0] === gate) {
+                index = i;
+                break;
+            }
+            i++;
+        }
+
         if (index > -1) {
             this.inputs.splice(index, 1);
         }
@@ -137,8 +147,6 @@ export class Gate {
                 this.output = computeAnd(getOutputMux(this.inputs[0]), getOutputMux(this.inputs[1]));
                 break;
             case "OR":
-                console.log(getOutputMux(this.inputs[0]));
-                console.log(getOutputMux(this.inputs[1]));
                 this.output = computeOr(getOutputMux(this.inputs[0]), getOutputMux(this.inputs[1]));
                 break;
             case "NOT":
@@ -201,53 +209,12 @@ function setInput(event) {
 
 window.setInput = setInput;
 
-
-// // Simulate the circuit for given gates; Used for testing the circuit for all possible inputss
-// export function testSimulation(gates) {
-//     if (!checkConnections()) {
-//         return;
-//     }
-
-//     // reset output in gate
-//     for (let gateId in gates) {
-//         if (!gates[gateId].isInput) {
-//             gates[gateId].output = null;
-//         }
-//     }
-
-//     for (let gateId in gates) {
-//         const gate = gates[gateId];
-//         if (gate.isOutput) {
-//             getResult(gate);
-//         }
-//     }
-// }
-
 // function to submit the desired circuit and get the final success or failure message
 export function submitCircuit() {
     document.getElementById("table-body").innerHTML = "";
-    // if (window.currentTab === "task1") {
-    //     halfAdder("Input-0", "Input-1", "Output-3", "Output-2");
-    // } else if (window.currentTab === "task2") {
-    //     fullAdderTest("Input-0", "Input-1", "Input-2", "Output-4", "Output-3");
-    // } else if (window.currentTab === "task3") {
-    //     rippleAdderTest(
-    //         "Input-0",
-    //         "Input-1",
-    //         "Input-3",
-    //         "Input-4",
-    //         "Input-6",
-    //         "Input-7",
-    //         "Input-9",
-    //         "Input-10",
-    //         "Input-13",
-    //         "Output-12",
-    //         "Output-2",
-    //         "Output-5",
-    //         "Output-8",
-    //         "Output-11"
-    //     );
-    // }
+    if (window.currentTab === "task1") {
+        validateAlu("Input-0", "Input-1", "Input-2","Input-3","Input-4", "Output-5", "Output-6");
+    }
 }
 window.submitCircuit = submitCircuit;
 

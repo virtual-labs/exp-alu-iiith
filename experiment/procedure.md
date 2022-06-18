@@ -1,5 +1,10 @@
-1. With The help of Theory Page , try to build the ALU Circuit.  
-2. If You are unable to make it , load or export the circuit directly and use it.  
-3. Try to put various values and see whether it satisfies the Truth Tabel or not.  
-4. There is an import feature, which lets you construct building blocks. Click on import and then click on circuit board to see the imported block. For more details, refer import section in manual.  
+Learn everything from the 'Demo' section.
+
+In the 'Practice' section you need to make the circuit for the 1-bit ALU, that has to perform the following operations:
+1. SUM
+2. Logic AND
+3. Logic OR
+4. Logic Xor
+
+After performing the tasks observe the output bits Output and Cout.
 

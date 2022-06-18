@@ -897,7 +897,7 @@ export function registerGate(id, gate) {
 export function initALU() {
   const ids = ["Input-0", "Input-1", "Input-2","Input-3","Input-4", "Output-5", "Output-6"]; // [A,B,carry -input,Sum,carry-output]
   const types = ["Input", "Input", "Input","Input","Input", "Output", "Output"];
-  const names = ["A", "B", "cin","S1","S0", "Sum", "cout"];
+  const names = ["A", "B", "cin","S1","S0", "Output", "cout"];
   const positions = [
     { x: 40, y: 150 },
     { x: 40, y: 375 },

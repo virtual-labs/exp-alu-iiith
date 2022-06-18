@@ -1,0 +1,65 @@
+{
+    "version": 2.0,
+    "questions": [
+        {
+            "question": "1. ALU is based on the following:",
+            "answers": {
+                "a": "Arithmetic",
+                "b": "Combinational Logic",
+                "c": "Cobigram Logic",
+                "d": "Sequential Logic"
+            },
+            "correctAnswer": "b",
+            "explanations": {"b":"ALU is based on the Combinational Logic"},
+            "difficulty": "beginner"
+        },
+        {
+            "question": "2. The ALU is used to:",
+            "answers": {
+                "a": "Perform arithmetic operations",
+                "b": "Perform logical operations",
+                "c": "Perform arithmetic and logical operations",
+                "d": "None of these"
+            },
+            "correctAnswer": "c",
+            "explanations": {"c":"The ALU is used to perform arithmetic and logical operations"},
+            "difficulty": "intermediate"
+        },
+        {
+            "question": "3. Pick the odd one out",
+            "answers": {
+                "a": "|",
+                "b": ">>",
+                "c": ".",
+                "d": "^"
+            },
+            "correctAnswer": "c",
+            "explanations": {"c":". is the odd one out because it is the only one that is not a bitwise operator"},
+            "difficulty": "advanced"
+        },
+        {
+            "question": "4. Which of the following is the basic building block of an arithmetic logic unit in computers",
+            "answers": {
+                "a": "Adders",
+                "b": "Subtractors",
+                "c": "Multipliers",
+                "d": "Multiplexers"
+            },
+            "correctAnswer": "a",
+            "explanations": {"a":"Adders are the basic building blocks of an arithmetic logic unit in computers"},
+            "difficulty": "Intermediate"
+        },
+        {
+            "question": "5. Modern ALU can perform:",
+            "answers": {
+                "a": "Data Manipulation",
+                "b": "Exponentiation",
+                "c": "Logarithm",
+                "d": "All of the above"
+            },
+            "correctAnswer": "d",
+            "explanations": {"d":"All of the above"},
+            "difficulty": "intermediate"
+        }
+    ]
+}

@@ -1,7 +1,7 @@
-// import { gates, testSimulation } from "./gate.js";
-// import { fullAdder, testSimulationFA } from "./fa.js";
-
 "use strict";
+import {gates} from "./gate.js";
+import {fullAdder} from "./fa.js";
+import { checkConnectionsMux, testSimulationMux, mux } from "./mux.js";
 
 // Helper functions
 export function computeXor(a, b) {
@@ -23,226 +23,116 @@ export function computeNor(a, b) {
     return !(a || b);
 }
 
-// Tests the circuit for all values and checks if it is a half adder
-// export function halfAdder(inputA, inputB, carryOut, sumOut) {
-//     // This function takes 4 ids of the respective Gates
-//     let gates_list = gates;
+function computeFullAdder(a,b,cin){
+    let sum = a+b+cin;
+    if (sum === 0) {
+        return [0,0];
+    }
+    else if (sum === 1) {
+        return [1,0];
+    }
+    else if (sum === 2) {
+        return [0,1];   
+    }
+    else if (sum === 3) {
+        return [1,1];
+    }
+}
 
-//     const input0 = gates_list[inputA];
-//     const input1 = gates_list[inputB];
-//     let circuitIsCorrect = true;
+function computeMux(s1,s0,a,b,cin){
+    if(s1===0 && s0===0){
+        let arr = computeFullAdder(a,b,cin);
+        return arr[0];
+    }
+    else if(s1===0 && s0===1){
+        return computeAnd(a,b);
+    }
+    else if(s1===1 && s0===0){
+        return computeOr(a,b);
+    }
+    else if(s1===1 && s1===1){
+        if(computeXor(a,b)){
+            return 1;
+        }
+        return 0;
+    }
+}
 
-//     let dataTable = "";
-
-//     for (let i = 0; i < 4; i++) {
-//         //convert i to binary
-//         let binary = i.toString(2).padStart(2, "0");
-//         binary = binary.split("").reverse().join("");
-
-//         input1.setOutput(binary[0] === "1");
-//         input0.setOutput(binary[1] === "1");
-//         const calculatedSum = computeXor(input0.output, input1.output) ? 1 : 0;
-//         const calculatedCarry = computeAnd(input0.output, input1.output) ? 1 : 0;
-
-//         // simulate the circuit
-//         testSimulation(gates_list);
-//         const sum = gates_list[sumOut].output ? 1 : 0;
-//         const carry = gates_list[carryOut].output ? 1 : 0;
-
-//         dataTable += `<tr><th>${binary[1]}</th><th>${binary[0]} </th><td> ${calculatedSum} </td><td> ${calculatedCarry} </td><td> ${sum} </td><td> ${carry} </td></tr>`;
-
-//         if (sum != calculatedSum || carry != calculatedCarry) {
-//             circuitIsCorrect = false;
-//         }
-//     }
-
-//     const table_elem = document.getElementById("table-body");
-//     table_elem.insertAdjacentHTML("beforeend", dataTable);
-
-//     const result = document.getElementById("result");
-
-//     if (circuitIsCorrect) {
-//         result.innerHTML = "<span>&#10003;</span> Success";
-//         result.className = "success-message";
-//     } else {
-//         result.innerHTML = "<span>&#10007;</span> Fail";
-//         result.className = "failure-message";
-//     }
-// }
-
-// // Tests the circuit for all values and checks if it is a full adder
-// export function fullAdderTest(inputA, inputB, carryInput, carryOut, sumOut) {
-//     let gates_list = gates;
-//     const input0 = gates_list[inputA];
-//     const input1 = gates_list[inputB];
-//     const carryIn = gates_list[carryInput];
-//     let circuitIsCorrect = true;
-//     let dataTable = "";
-
-//     for (let i = 0; i < 8; i++) {
-//         // covert i to binary
-//         let binary = i.toString(2).padStart(3, "0");
-//         binary = binary.split("").reverse().join("");
-
-//         input0.setOutput(binary[2] === "1");
-//         input1.setOutput(binary[1] === "1");
-//         carryIn.setOutput(binary[0] === "1");
-
-//         const aXorb = computeXor(input0.output, input1.output);
-
-//         // calculated sum is ((a xor b) xor carry_in)
-//         const calculatedSum = computeXor(aXorb, carryIn.output);
-
-//         // calculated carry is a.b + (a xor b).carry_in
-//         const calculatedCarry = computeOr(
-//             computeAnd(input0.output, input1.output),
-//             computeAnd(aXorb, carryIn.output)
-//         ) ? 1 : 0;
-
-//         // simulate the circuit
-//         testSimulation(gates_list);
-//         const sum = gates_list[sumOut].output ? 1 : 0;
-//         const carry = gates_list[carryOut].output ? 1 : 0;
-
-//         dataTable += `<tr><th>${binary[2]}</th><th>${binary[1]}</th><th>${binary[0]} </th><td> ${calculatedSum} </td><td> ${calculatedCarry} </td><td> ${sum} </td><td> ${carry}</td></tr>`;
+function computeAlu(inputString){
+    let inputA = parseInt(inputString[0]);
+    let inputB = parseInt(inputString[1]);
+    let inputCin = parseInt(inputString[2]);
+    let inputS0 = parseInt(inputString[3]);
+    let inputS1 = parseInt(inputString[4]);
+    let output = computeMux(inputS1,inputS0,inputA,inputB,inputCin);
+    let cout = computeFullAdder(inputA,inputB,inputCin)[1];
+    let outputString = output.toString() + cout.toString();
+    return outputString;
+}
 
 
-//         if (sum != calculatedSum || carry != calculatedCarry) {
-//             circuitIsCorrect = false;
-//         }
-//     }
+export function validateAlu(inputA,inputB,inputCin,inputS1,inputS0,outputOut,outputCout) {
+    let gates_list = gates;
+    let fa_list = fullAdder;
+    let mux_list = mux;
 
-//     const table_elem = document.getElementById("table-body");
-//     table_elem.insertAdjacentHTML("beforeend", dataTable);
+    const A = gates_list[inputA];
+    const B = gates_list[inputB];
+    const cin = gates_list[inputCin];
+    const S0 = gates_list[inputS0];
+    const S1 = gates_list[inputS1];
 
-//     const result = document.getElementById("result");
+    let circuitIsCorrect = true;
 
-//     if (circuitIsCorrect) {
-//         result.innerHTML = "<span>&#10003;</span> Success";
-//         result.className = "success-message";
-//     } else {
-//         result.innerHTML = "<span>&#10007;</span> Fail";
-//         result.className = "failure-message";
-//     }
-// }
+    let dataTable = "";
 
-// // Tests the circuit for all values and checks if it is a Ripple carry adder
-// export function rippleAdderTest(
-//     A0,
-//     B0,
-//     A1,
-//     B1,
-//     A2,
-//     B2,
-//     A3,
-//     B3,
-//     Cin,
-//     outputCout,
-//     outputS0,
-//     outputS1,
-//     outputS2,
-//     outputS3
-// ) {
-//     let gates_list = gates;
-//     let fA = fullAdder;
-//     const inputA0 = gates_list[A0];
-//     const inputB0 = gates_list[B0];
-//     const inputA1 = gates_list[A1];
-//     const inputB1 = gates_list[B1];
-//     const inputA2 = gates_list[A2];
-//     const inputB2 = gates_list[B2];
-//     const inputA3 = gates_list[A3];
-//     const inputB3 = gates_list[B3];
-//     const carryIn = gates_list[Cin];
-//     let circuitIsCorrect = true;
+    document.getElementById("result").innerHTML = "";
 
-//     for (
-//         let i = 0;
-//         i < 512;
-//         i++ // 512 = 2^9 basically calculates all the possible combinations for 9 inputs
-//     ) {
-//         // covert i to binary
-//         let binary = i.toString(2).padStart(9, "0");
-//         binary = binary.split("").reverse().join("");
+    if(!checkConnectionsMux())
+    {
+        document.getElementById("table-body").innerHTML = "";
+        let head = "";
+        head =
+            '<tr><th colspan="5">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1</th><th>S0</th><th>A</th><th>B</th><th>C</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
+        document.getElementById("table-head").innerHTML = head;
+        return;
+    }
 
+    for (let i = 0; i < 32; i++) {
+        //convert i to binary
+        let binary = i.toString(2).padStart(5, "0");
+        binary = binary.split("").reverse().join("");
+        A.setOutput(binary[0] === "1");
+        B.setOutput(binary[1] === "1");
+        cin.setOutput(binary[2] === "1");
+        S0.setOutput(binary[3] === "1");
+        S1.setOutput(binary[4] === "1");
 
-//         inputA0.setOutput(binary[8] === "1");
-//         inputB0.setOutput(binary[7] === "1");
-//         inputA1.setOutput(binary[6] === "1");
-//         inputB1.setOutput(binary[5] === "1");
-//         inputA2.setOutput(binary[4] === "1");
-//         inputB2.setOutput(binary[3] === "1");
-//         inputA3.setOutput(binary[2] === "1");
-//         inputB3.setOutput(binary[1] === "1");
-//         carryIn.setOutput(binary[0] === "1");
+        // simulate the circuit
+        testSimulationMux(fa_list,gates_list,mux_list);
+        const out = gates_list[outputOut].output ? 1 : 0;
+        const cout = gates_list[outputCout].output ? 1 : 0;
+        let outputString = "";
+        outputString += out;
+        outputString += cout;
+        let expectedString = computeAlu(binary);
+        dataTable += `<tr><th>${binary[4]}</th><th>${binary[3]}</th><th>${binary[0]}</th><th>${binary[1]}</th><th>${binary[2]}</th><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td> ${cout} </td><td> ${out} </td></tr>`;
 
-//         // FOR FIRST ADDER
-//         const aXorb = computeXor(inputA0.output, inputB0.output);
-//         // calculated sum is ((a xor b) xor carry_in)
-//         const sumS0 = computeXor(aXorb, carryIn.output);
-//         // calculated carry is a.b + (a xor b).c
-//         const carryC1 = computeOr(
-//             computeAnd(inputA0.output, inputB0.output),
-//             computeAnd(aXorb, carryIn.output)
-//         );
+        if ( expectedString !== outputString) {
+            circuitIsCorrect = false;
+        }
+    }
 
-//         // FOR SECOND ADDER
-//         const aXorb2 = computeXor(inputA1.output, inputB1.output);
-//         // calculated sum is ((a xor b) xor carry_in)
-//         const sumS1 = computeXor(aXorb2, carryC1);
-//         // calculated carry is a.b + (a xor b).c
-//         const carryC2 = computeOr(
-//             computeAnd(inputA1.output, inputB1.output),
-//             computeAnd(aXorb2, carryC1)
-//         );
+    const table_elem = document.getElementById("table-body");
+    table_elem.insertAdjacentHTML("beforeend", dataTable);
 
-//         // FOR THIRD ADDER
-//         const aXorb3 = computeXor(inputA2.output, inputB2.output);
-//         // calculated sum is ((a xor b) xor carry_in)
-//         const sumS2 = computeXor(aXorb3, carryC2);
-//         // calculated carry is a.b + (a xor b).c
-//         const carryC3 = computeOr(
-//             computeAnd(inputA2.output, inputB2.output),
-//             computeAnd(aXorb3, carryC2)
-//         );
+    const result = document.getElementById("result");
 
-//         // FOR FOURTH ADDER
-//         const aXorb4 = computeXor(inputA3.output, inputB3.output);
-//         // calculated sum is ((a xor b) xor carry_in)
-//         const sumS3 = computeXor(aXorb4, carryC3);
-//         // calculated carry is a.b + (a xor b).c
-//         const carryCout = computeOr(
-//             computeAnd(inputA3.output, inputB3.output),
-//             computeAnd(aXorb4, carryC3)
-//         );
-
-//         // simulate the circuit
-//         testSimulationFA(fA, gates_list);
-//         const sumSout0 = gates_list[outputS0].output;
-//         const sumSout1 = gates_list[outputS1].output;
-//         const sumSout2 = gates_list[outputS2].output;
-//         const sumSout3 = gates_list[outputS3].output;
-//         const carryOut = gates_list[outputCout].output;
-
-//         if (
-//             sumS0 != sumSout0 ||
-//             sumS1 != sumSout1 ||
-//             sumS2 != sumSout2 ||
-//             sumS3 != sumSout3 ||
-//             carryCout != carryOut
-//         ) {
-//             circuitIsCorrect = false;
-//             break;
-//         }
-//     }
-
-//     const result = document.getElementById("result");
-
-//     if (circuitIsCorrect) {
-//         result.innerHTML = "<span>&#10003;</span> Success";
-//         result.className = "success-message";
-//     } else {
-//         result.innerHTML = "<span>&#10007;</span> Fail";
-//         result.className = "failure-message";
-//     }
-// }
+    if (circuitIsCorrect) {
+        result.innerHTML = "<span>&#10003;</span> Success";
+        result.className = "success-message";
+    } else {
+        result.innerHTML = "<span>&#10007;</span> Fail";
+        result.className = "failure-message";
+    }
+}

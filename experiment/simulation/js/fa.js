@@ -18,13 +18,6 @@ export function clearFAs() {
   fullAdder = {};
 }
 
-// {output-id: [gate,pos]}
-export const finalOutputs = {
-  "Output-5": [],
-  "Output-8": [],
-  "Output-11": [],
-  "Output-12": [],
-};
 
 export class FullAdder {
   constructor() {
@@ -152,34 +145,7 @@ export function getOutputFA(gate, pos) {
   }
 }
 
-// Simulates the circuit for given fulladders and gates; Used for testing the circuit for all values
-// export function testSimulationFA(fA, gates) {
-//   if (!checkConnectionsFA()) {
-//     return;
-//   }
 
-//   // reset output in gate
-//   for (let faID in fA) {
-//     fA[faID].cout = null;
-//     fA[faID].sum = null;
-//   }
-//   for (let gateId in gates) {
-//     const gate = gates[gateId];
-//     if (gate.isOutput) {
-//       gates[gateId].output = null;
-//     }
-//   }
-
-//   for (let gateId in gates) {
-//     if (gates[gateId].isOutput) {
-//       getResultFA(gates[gateId].inputs[0]);
-//     }
-//   }
-
-//   for (let key in finalOutputs) {
-//     gates[key].output = getOutputFA(finalOutputs[key][0], finalOutputs[key][1]);
-//   }
-// }
 
 // Delete Full Adder
 export function deleteFA(id) {
@@ -201,13 +167,5 @@ export function deleteFA(id) {
     if (fullAdder[key].cin[0] === fa) {
       fullAdder[key].cin = null;
     }
-  }
-
-  for (let key in finalOutputs) {
-    if (finalOutputs[key][0] === fa) {
-      delete finalOutputs[key];
-    }
-
-    gates[key].inputs = [];
   }
 }

@@ -344,3 +344,7 @@ svg.wire path {
 .v-instruction-container {
   justify-content: flex-start;
 }
+.highlight {
+  border:3px solid red;
+  box-shadow: 0 0 10px #719ECE;
+}

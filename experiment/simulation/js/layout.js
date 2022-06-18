@@ -6,7 +6,7 @@ import {
   initALU,
   refreshWorkingArea,
 } from "./main.js";
-import { simulateMux } from "./mux.js";
+import { simulateMux,deleteMux } from "./mux.js";
 "use strict";
 // Wires Colours
 export const wireColours = [
@@ -52,6 +52,8 @@ menuOption.addEventListener("click", (e) => {
       deleteElement(window.selectedComponent);
     } else if (window.componentType === "fullAdder") {
       deleteFA(window.selectedComponent);
+    } else if (window.componentType === "mux") {
+      deleteMux(window.selectedComponent);
     }
   }
   window.selectedComponent = null;
