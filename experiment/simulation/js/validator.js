@@ -5,7 +5,7 @@ import { checkConnectionsMux, testSimulationMux, mux } from "./mux.js";
 
 // Helper functions
 export function computeXor(a, b) {
-    return a != b;
+    return a !== b;
 }
 export function computeAnd(a, b) {
     return a && b;
@@ -14,7 +14,7 @@ export function computeOr(a, b) {
     return a || b;
 }
 export function computeXnor(a, b) {
-    return a == b;
+    return a === b;
 }
 export function computeNand(a, b) {
     return !(a && b);
@@ -116,10 +116,12 @@ export function validateAlu(inputA,inputB,inputCin,inputS1,inputS0,outputOut,out
         outputString += out;
         outputString += cout;
         let expectedString = computeAlu(binary);
-        dataTable += `<tr><th>${binary[4]}</th><th>${binary[3]}</th><th>${binary[0]}</th><th>${binary[1]}</th><th>${binary[2]}</th><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td> ${cout} </td><td> ${out} </td></tr>`;
-
         if ( expectedString !== outputString) {
             circuitIsCorrect = false;
+            dataTable += `<tr><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="failure-table"> ${cout} </td><td class="failure-table"> ${out} </td></tr>`;
+        }
+        else{
+            dataTable += `<tr><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="success-table"> ${cout} </td><td class="success-table"> ${out} </td></tr>`;
         }
     }
 

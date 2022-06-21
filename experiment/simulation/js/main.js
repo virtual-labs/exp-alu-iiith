@@ -9,7 +9,7 @@ let num_wires = 0;
 
 // Gets the coordinates of the mouse
 document.getScroll = function () {
-  if (window.pageYOffset != undefined) {
+  if (window.pageYOffset !== undefined) {
     return [pageXOffset, pageYOffset];
   } else {
     let sx,
@@ -512,13 +512,13 @@ export const connectMux = function () {
             pos = "output";
           }
           input.setConnected(true, pos);
-          if(Object.keys(fromEndpoint.overlays)[0].includes("a")) {
+          if(Object.keys(toEndpoint.overlays)[0].includes("a0")) {
             fajs.fullAdder[toEndpoint.elementId].setA0([input, pos]);
           }
-          else if(Object.keys(fromEndpoint.overlays)[0].includes("b")) {
+          else if(Object.keys(toEndpoint.overlays)[0].includes("b0")) {
             fajs.fullAdder[toEndpoint.elementId].setB0([input, pos]);
           }
-          else if(Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
+          else if(Object.keys(toEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[toEndpoint.elementId].setCin([input, pos]);
           }
         }

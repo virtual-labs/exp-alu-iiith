@@ -33,17 +33,22 @@
 		<div class="columns is-centered">
 			<div class="column">
 				<div class="v-instruction-container instructions-box">
-					<div class="v-instruction-title" id="TaskTitle">ALU</div>
-					<div class="v-instruction-text" id="TaskDescription">
+					<div class="v-instruction-title" id="task-title">ALU</div>
+					<div class="v-instruction-text" style="text-align: left;" id="task-description">
 						Implement a 1-bit ALU whose operations are sum,and,or,xor
 						<br>
 					</div>
-					<div>
-						<p>Click on components on the left side to add them to the circuit board.</p>
-						<p>Drag and drop components to move them around, connect them using wires by dragging your cursor from one endpoint to another.</p>
-						<p>You can delete components by right clicking on them and selecting the delete option.</p>
-						<p>Click on the "Simulate" button to simulate the circuit and see the output.</p>
-						<p>Click on the "Submit" button to submit the circuit once you think you have built the required circuit.</p>
+					<div class="v-content" style="text-align: left; padding-left: 10%;">
+						<ul style="list-style: disc;">
+						<li>Click on components on the left side to add them to the circuit board.</li>
+						<li>Drag and drop components to move them around, connect them using wires by dragging your
+							cursor from one endpoint to another.</li>
+						<li>You can delete components by right clicking on them and selecting the delete option.</li>
+						<li>Click on the "Simulate" button to simulate the circuit and see the output.</li>
+						<li>Click on the "Submit" button to submit the circuit once you think you have built the required
+							circuit.</li>
+						</ul>
+						<b style="font-size: 1.1rem;">Here S1,S0 are select lines with S1 being MSB and S0 being LSB.</b>
 					</div>
 				</div>
 			</div>
@@ -76,20 +81,18 @@
 			<div class="v-datalist-container components-list">
 				<div class="v-datalist-title">Observations</div>
 				<div class="v-datalist-row">
-					<div class="v-table-wrap">
+					<div id="result"></div>
+					<div class="v-table-wrap">						
 						<table class="table is-bordered is-fullwidth">
 							<thead id="table-head">
 								<tr>
-									<th colspan="5">Inputs</th>
+									<th colspan="2">Inputs</th>
 									<th colspan="2">Expected Values</th>
 									<th colspan="2">Observed Values</th>
 								</tr>
 								<tr>
-									<th>S1</th>
-									<th>S0</th>
-									<th>A</th>
-									<th>B</th>
-									<th>C</th>
+									<th>S1S0</th>
+									<th>ABC</th>
 									<th>cout</th>
 									<th>Out</th>
 									<th>cout</th>
@@ -99,8 +102,7 @@
 							<tbody id="table-body">
 							</tbody>
 						</table>
-					</div>
-					<div id="result"></div>
+					</div>					
 				</div>
 				<div class="v-datalist-row">
 					<button class="v-button" onclick="simulateMux()">Simulate</button>

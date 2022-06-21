@@ -2,11 +2,6 @@ import { registerGate, jsPlumbInstance } from "./main.js";
 import { setPosition } from "./layout.js";
 import { gates } from "./gate.js";
 import { fullAdder } from "./fa.js";
-import {
-    computeAnd,
-    computeOr,
-    computeXor
-} from "./validator.js";
 
 "use strict";
 // Dictionary of all full adders in the circuit with their IDs as keys
@@ -172,48 +167,48 @@ export function getOutputMux(input) {
 export function getResultMux(fa) {
     // check if fa type is Gate object
     if (fa.constructor.name === "Mux") {
-        if (fa.output != null) {
+        if (fa.output !== null) {
             return;
         }
-        if (getOutputMux(fa.i0) == null) {
+        if (getOutputMux(fa.i0) === null) {
             getResultMux(fa.i0[0]);
         }
-        if (getOutputMux(fa.i1) == null) {
+        if (getOutputMux(fa.i1) === null) {
             getResultMux(fa.i1[0]);
         }
-        if (getOutputMux(fa.i2) == null) {
+        if (getOutputMux(fa.i2) === null) {
             getResultMux(fa.i2[0]);
         }
-        if (getOutputMux(fa.i3) == null) {
+        if (getOutputMux(fa.i3) === null) {
             getResultMux(fa.i3[0]);
         }
-        if (getOutputMux(fa.s0) == null) {
+        if (getOutputMux(fa.s0) === null) {
             getResultMux(fa.s0[0]);
         }
-        if (getOutputMux(fa.s1) == null) {
+        if (getOutputMux(fa.s1) === null) {
             getResultMux(fa.s1[0]);
         }
         fa.generateOutput();
     }
     else if (fa.constructor.name === "FullAdder") {
-        if (fa.cout != null && fa.sum != null) {
+        if (fa.cout !== null && fa.sum !== null) {
             return;
         }
 
-        if (getOutputMux(fa.a0) == null) {
+        if (getOutputMux(fa.a0) === null) {
             getResultMux(fa.a0[0]);
         }
-        if (getOutputMux(fa.b0) == null) {
+        if (getOutputMux(fa.b0) === null) {
             getResultMux(fa.b0[0]);
         }
-        if (getOutputMux(fa.cin) == null) {
+        if (getOutputMux(fa.cin) === null) {
             getResultMux(fa.cin[0]);
         }
 
         fa.generateOutput();
     }
     else {
-        if (fa.output != null) {
+        if (fa.output !== null) {
             return;
         }
         for (let i = 0; i < fa.inputs.length; i++) {
@@ -243,15 +238,15 @@ export function checkConnectionsMux() {
         }
 
         // Check if all the inputs are connected
-        if (gate.a0 == null || gate.a0.length === 0) {
+        if (gate.a0 === null || gate.a0.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (gate.b0 == null || gate.b0.length === 0) {
+        if (gate.b0 === null || gate.b0.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (gate.cin == null || gate.cin.length === 0) {
+        if (gate.cin === null || gate.cin.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
@@ -259,7 +254,7 @@ export function checkConnectionsMux() {
     for (let gateId in gates) {
         const gate = gates[gateId];
         const id = document.getElementById(gate.id);
-        if (gate.inputPoints.length != gate.inputs.length) {
+        if (gate.inputPoints.length !== gate.inputs.length) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         } else if (gate.isConnected === false && gate.isOutput === false) {
@@ -268,33 +263,33 @@ export function checkConnectionsMux() {
         }
     }
     for (let muxId in mux) {
-        const muxi = mux[muxId];
-        const id = document.getElementById(muxi.id);
-        if (muxi.outputIsConnected === false) {
+        const muxComponent = mux[muxId];
+        const id = document.getElementById(muxComponent.id);
+        if (muxComponent.outputIsConnected === false) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxi.i0[0] == null || muxi.i0[0].length === 0) {
+        if (muxComponent.i0[0] === null || muxComponent.i0[0].length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxi.i1[0] == null || muxi.i1[0].length === 0) {
+        if (muxComponent.i1[0] === null || muxComponent.i1[0].length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxi.i2[0] == null || muxi.i2[0].length === 0) {
+        if (muxComponent.i2[0] === null || muxComponent.i2[0].length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxi.i3[0] == null || muxi.i3[0].length === 0) {
+        if (muxComponent.i3[0] === null || muxComponent.i3[0].length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxi.s0[0] == null || muxi.s0[0].length === 0) {
+        if (muxComponent.s0[0] === null || muxComponent.s0[0].length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxi.s1[0] == null || muxi.s1[0].length === 0) {
+        if (muxComponent.s1[0] === null || muxComponent.s1[0].length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
@@ -376,43 +371,43 @@ export function testSimulationMux(fA, gates, muxes) {
 
 // Delete Mux
 export function deleteMux(id) {
-    const muxi = mux[id];
-    jsPlumbInstance.removeAllEndpoints(document.getElementById(muxi.id));
-    jsPlumbInstance._removeElement(document.getElementById(muxi.id));
+    const muxComponent = mux[id];
+    jsPlumbInstance.removeAllEndpoints(document.getElementById(muxComponent.id));
+    jsPlumbInstance._removeElement(document.getElementById(muxComponent.id));
 
     for(let key in mux) {
         if(mux[key].id === id) {
             delete mux[key];
             continue;
         }
-        if(mux[key].i0[0] === muxi) {
+        if(mux[key].i0[0] === muxComponent) {
             mux[key].i0 = null;
         }
-        if(mux[key].i1[0] === muxi) {
+        if(mux[key].i1[0] === muxComponent) {
             mux[key].i1 = null;
         }
-        if(mux[key].i2[0] === muxi) {
+        if(mux[key].i2[0] === muxComponent) {
             mux[key].i2 = null;
         }
-        if(mux[key].i3[0] === muxi) {
+        if(mux[key].i3[0] === muxComponent) {
             mux[key].i3 = null;
         }
-        if(mux[key].s0[0] === muxi) {
+        if(mux[key].s0[0] === muxComponent) {
             mux[key].s0 = null;
         }
-        if(mux[key].s1[0] === muxi) {
+        if(mux[key].s1[0] === muxComponent) {
             mux[key].s1 = null;
         }
     }
 
     for (let key in fullAdder) {
-        if (fullAdder[key].a0[0] === muxi) {
+        if (fullAdder[key].a0[0] === muxComponent) {
             fullAdder[key].a0 = null;
         }
-        if (fullAdder[key].b0[0] === muxi) {
+        if (fullAdder[key].b0[0] === muxComponent) {
             fullAdder[key].b0 = null;
         }
-        if (fullAdder[key].cin[0] === muxi) {
+        if (fullAdder[key].cin[0] === muxComponent) {
             fullAdder[key].cin = null;
        }
     }
@@ -420,13 +415,13 @@ export function deleteMux(id) {
     for (let elem in gates) {
         let found = 0;
         for (let index in gates[elem].inputs) {
-            if (gates[elem].inputs[index][0].id === muxi.id) {
+            if (gates[elem].inputs[index][0].id === muxComponent.id) {
                 found = 1;
                 break;
             }
         }
         if (found === 1) {
-            gates[elem].removeInput(muxi);
+            gates[elem].removeInput(muxComponent);
         }
     }
 }

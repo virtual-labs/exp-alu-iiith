@@ -6,7 +6,7 @@ import {
   computeOr,
   computeXor
 } from "./validator.js";
-
+import {mux} from "./mux.js";
 "use strict";
 // Dictionary of all full adders in the circuit with their IDs as keys
 export let fullAdder = {};
@@ -168,4 +168,36 @@ export function deleteFA(id) {
       fullAdder[key].cin = null;
     }
   }
+  for(let key in mux){
+    if(mux[key].i0[0] === fa) {
+        mux[key].i0 = null;
+    }
+    if(mux[key].i1[0] === fa) {
+        mux[key].i1 = null;
+    }
+    if(mux[key].i2[0] === fa) {
+        mux[key].i2 = null;
+    }
+    if(mux[key].i3[0] === fa) {
+        mux[key].i3 = null;
+    }
+    if(mux[key].s0[0] === fa) {
+        mux[key].s0 = null;
+    }
+    if(mux[key].s1[0] === fa) {
+        mux[key].s1 = null;
+    }
+  }
+  for (let elem in gates) {
+    let found = 0;
+    for (let index in gates[elem].inputs) {
+        if (gates[elem].inputs[index][0].id === fa.id) {
+            found = 1;
+            break;
+        }
+    }
+    if (found === 1) {
+        gates[elem].removeInput(fa);
+    }
+  } 
 }

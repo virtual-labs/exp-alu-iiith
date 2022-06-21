@@ -9,7 +9,7 @@ import {
     computeNor,
     validateAlu
 } from "./validator.js";
-import { getOutputMux } from "./mux.js";
+import { getOutputMux, mux } from "./mux.js";
 'use strict';
 export let gates = {}; // Dictionary of gates with their IDs as keys
 window.numComponents = 0;
@@ -106,7 +106,7 @@ export class Gate {
         el.style.left = x + "px";
         el.style.top = y + "px";
 
-        if (this.type != "Input" && this.type != "Output") {
+        if (this.type !== "Input" && this.type !== "Output") {
 
             el.addEventListener(
                 "contextmenu",
@@ -220,13 +220,44 @@ window.submitCircuit = submitCircuit;
 
 // Delete the selected gate
 export function deleteElement(gateid) {
-    let gate = gates[gateid];
+    const gate = gates[gateid];
     jsPlumbInstance.removeAllEndpoints(document.getElementById(gate.id));
     jsPlumbInstance._removeElement(document.getElementById(gate.id));
     for (let elem in gates) {
         if (gates[elem].inputs.includes(gate)) {
             gates[elem].removeInput(gate);
         }
+    }
+    for(let key in mux){
+        if(mux[key].i0[0] === gate) {
+            mux[key].i0 = null;
+        }
+        if(mux[key].i1[0] === gate) {
+            mux[key].i1 = null;
+        }
+        if(mux[key].i2[0] === gate) {
+            mux[key].i2 = null;
+        }
+        if(mux[key].i3[0] === gate) {
+            mux[key].i3 = null;
+        }
+        if(mux[key].s0[0] === gate) {
+            mux[key].s0 = null;
+        }
+        if(mux[key].s1[0] === gate) {
+            mux[key].s1 = null;
+        }
+    }
+    for (let key in fullAdder) {
+        if (fullAdder[key].a0[0] === gate) {
+            fullAdder[key].a0 = null;
+        }
+        if (fullAdder[key].b0[0] === gate) {
+            fullAdder[key].b0 = null;
+        }
+        if (fullAdder[key].cin[0] === gate) {
+            fullAdder[key].cin = null;
+       }
     }
     delete gates[gateid];
 }
