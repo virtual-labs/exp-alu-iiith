@@ -116,7 +116,7 @@ function clearObservations() {
 
   if (window.currentTab === "task1") {
     head =
-      '<tr><th colspan="5">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1</th><th>S0</th><th>A</th><th>B</th><th>C</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
+      '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
   } 
 
   document.getElementById("table-head").innerHTML = head;

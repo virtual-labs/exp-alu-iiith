@@ -269,27 +269,27 @@ export function checkConnectionsMux() {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxComponent.i0[0] === null || muxComponent.i0[0].length === 0) {
+        if (muxComponent.i0 === null || muxComponent.i0.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxComponent.i1[0] === null || muxComponent.i1[0].length === 0) {
+        if (muxComponent.i1 === null || muxComponent.i1.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxComponent.i2[0] === null || muxComponent.i2[0].length === 0) {
+        if (muxComponent.i2 === null || muxComponent.i2.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxComponent.i3[0] === null || muxComponent.i3[0].length === 0) {
+        if (muxComponent.i3 === null || muxComponent.i3.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxComponent.s0[0] === null || muxComponent.s0[0].length === 0) {
+        if (muxComponent.s0 === null || muxComponent.s0.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
-        if (muxComponent.s1[0] === null || muxComponent.s1[0].length === 0) {
+        if (muxComponent.s1 === null || muxComponent.s1.length === 0) {
             printErrors("Highlighted component not connected properly\n",id);
             return false;
         }
@@ -299,6 +299,7 @@ export function checkConnectionsMux() {
 
 // Simulates the circuit
 export function simulateMux() {
+    clearResult();
     if (!checkConnectionsMux()) {
         return;
     }
@@ -367,6 +368,12 @@ export function testSimulationMux(fA, gates, muxes) {
         }
     }
 
+}
+
+export function clearResult() {
+    const result = document.getElementById("result");
+    result.innerHTML = "";
+    result.className = "";
 }
 
 // Delete Mux

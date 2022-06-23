@@ -9,7 +9,7 @@ import {
     computeNor,
     validateAlu
 } from "./validator.js";
-import { getOutputMux, mux } from "./mux.js";
+import { clearResult, getOutputMux, mux } from "./mux.js";
 'use strict';
 export let gates = {}; // Dictionary of gates with their IDs as keys
 window.numComponents = 0;
@@ -211,6 +211,7 @@ window.setInput = setInput;
 
 // function to submit the desired circuit and get the final success or failure message
 export function submitCircuit() {
+    clearResult();
     document.getElementById("table-body").innerHTML = "";
     if (window.currentTab === "task1") {
         validateAlu("Input-0", "Input-1", "Input-2","Input-3","Input-4", "Output-5", "Output-6");
