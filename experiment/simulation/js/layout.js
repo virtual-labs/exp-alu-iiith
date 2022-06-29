@@ -81,8 +81,6 @@ function changeTabs(e) {
     initALU();
     window.simulateMux = simulateMux;
   }
-  
-  updateInstructions();
   updateToolbar();
   clearObservations();
   resize();
@@ -90,12 +88,6 @@ function changeTabs(e) {
 
 window.changeTabs = changeTabs;
 
-function updateInstructions() {
-  if (window.currentTab === "task1") {
-    document.getElementById("task-title").innerHTML = "Full Adder";
-    document.getElementById("task-description").innerHTML = "Implement a 1-bit full adder using logic gates.";
-  } 
-}
 
 // Toolbar
 
@@ -122,13 +114,6 @@ function clearObservations() {
   document.getElementById("table-head").innerHTML = head;
   document.getElementById("result").innerHTML = "";
 }
-
-// Instruction box
-const instructionBox = document.getElementsByClassName("instructions-box")[0];
-instructionBox.addEventListener("click", (e) => {
-  instructionBox.classList.toggle("expand");
-});
-
 
 // Making webpage responsive
 

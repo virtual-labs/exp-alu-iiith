@@ -118,10 +118,10 @@ export function validateAlu(inputA,inputB,inputCin,inputS1,inputS0,outputOut,out
         let expectedString = computeAlu(binary);
         if ( expectedString !== outputString) {
             circuitIsCorrect = false;
-            dataTable += `<tr><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="failure-table"> ${cout} </td><td class="failure-table"> ${out} </td></tr>`;
+            dataTable += `<tr class="bold-table"><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="failure-table"> ${cout} </td><td class="failure-table"> ${out} </td></tr>`;
         }
         else{
-            dataTable += `<tr><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="success-table"> ${cout} </td><td class="success-table"> ${out} </td></tr>`;
+            dataTable += `<tr class="bold-table"><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="success-table"> ${cout} </td><td class="success-table"> ${out} </td></tr>`;
         }
     }
 

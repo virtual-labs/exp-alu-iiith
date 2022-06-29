@@ -328,6 +328,10 @@ svg.wire path {
   font-weight: bold;
 }
 
+.bold-table{
+  font-weight: bold;
+}
+
 .success-message {
   font-size: 1.2rem;
   color: rgb(31, 170, 31);
@@ -353,6 +357,7 @@ svg.wire path {
 }
 
 .v-instruction-container {
+  border:.2rem solid #97d23d;
   justify-content: flex-start;
 }
 .highlight {
