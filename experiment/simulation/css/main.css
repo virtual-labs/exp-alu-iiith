@@ -364,3 +364,29 @@ svg.wire path {
   border:3px solid red;
   box-shadow: 0 0 10px #719ECE;
 }
+.speed-box{
+  border:1px solid black;
+  color:black;
+  background-color:white;
+  text-align:center;
+  font-size:1.0rem;
+  border-radius:1em;
+  padding:.5em 1.0em;
+  cursor:pointer;
+}
+.wire-demo{
+  stroke-width: 3px;
+  fill: none;
+  stroke: black;
+}
+
+.gate-demo{
+  stroke-width: 3px;
+  fill: #29e;
+  stroke: black;
+}
+
+.text-demo{
+  font-size: 1.25em;
+  fill: black;
+}

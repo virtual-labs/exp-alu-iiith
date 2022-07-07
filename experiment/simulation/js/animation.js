@@ -1,4 +1,4 @@
-import { setCoordinates,fillInputDots,fillColor,objectDisappear,objectAppear,setColor,unsetColor} from "./animation-utility.js";
+import { setCoordinates,fillInputDots,fillColor,objectDisappear,objectAppear,setColor,unsetColor,calculateAnd,calculateFullAdder,calculateMux,calculateOr,calculateXor} from "./animation-utility.js";
 'use strict';
 
 window.appendInputA = appendInputA;
@@ -26,15 +26,44 @@ const svgns = "http://www.w3.org/2000/svg";
 
 const EMPTY="";
 // stroing the necessary div elements in const
-const STATUS = document.getElementById("play-or-pause");
-const OBSERV = document.getElementById("observations");
-const SPEED = document.getElementById("speed");
+const status = document.getElementById("play-or-pause");
+const observ = document.getElementById("observations");
+const speed = document.getElementById("speed");
 
 // global varaibles declared here
-const OBJECTS = [document.getElementById("inputa"),document.getElementById("inputb"),document.getElementById("cin"),document.getElementById("inputs1"),document.getElementById("inputs2"),document.getElementById("cout"),document.getElementById("outputf")];
-const TEXTINPUT = [document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text")];
-const TEXTOUTPUT = [document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text")];
-const DOTS = [document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle")];
+const OBJECTS = [
+    document.getElementById("inputa"),
+    document.getElementById("inputb"),
+    document.getElementById("cin"),
+    document.getElementById("inputs1"),
+    document.getElementById("inputs2"),
+    document.getElementById("cout"),
+    document.getElementById("outputf")
+];
+const TEXTINPUT = [
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text")
+];
+const TEXTOUTPUT = [
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text")
+];
+const DOTS = [
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle")
+];
 // First 4 dots emerge from input A0
 // Next 4 dots emerge from input B0
 // Next dot emerge from Cin
@@ -43,7 +72,6 @@ const DOTS = [document.createElementNS(svgns, "circle"),document.createElementNS
 // First dot is then used to final output
 
 
-let timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 
 // decide help to decide the speed
 let decide = false;
@@ -59,14 +87,6 @@ function demoWidth() {
         circuitBoard.style.height = `${windowHeight - circuitBoardTop - 20}px`;
     }
     sidePanels[0].style.height = circuitBoard.style.height;
-}
-
-// function to initialise the instruction box
-function instructionBoxInit() {
-    // Instruction box
-    instructionBox.addEventListener("click", () => {
-        instructionBox.classList.toggle("expand");
-    });
 }
 
 // function to initialise the input text i.e. either 0/1 that gets displayed after user click on them
@@ -126,7 +146,7 @@ function inputTextDisappear() {
 }
 
 function clearObservation() {
-    OBSERV.innerHTML = EMPTY;
+    observ.innerHTML = EMPTY;
 }
 function allDisappear() {
     inputDotDisappear();
@@ -207,67 +227,11 @@ function changeto0(coordinateX,coordinateY,object,textObject) {
     objectAppear(TEXTINPUT[textObject]);
 }
 
-function computeFullAdder(a,b,cin) {
-    let sum = parseInt(a) +parseInt(b) + parseInt(cin);
-    if (sum === 0) {
-        return ["0","0"];
-    }
-    else if (sum === 1) {
-        return ["1","0"];
-    }
-    else if (sum === 2) {
-        return ["0","1"];   
-    }
-    else if (sum === 3) {
-        return ["1","1"];
-    }
-
-}
-
-function computeAnd(a,b){
-    if(a==="1" && b==="1"){
-        return "1";
-    }
-    return "0";
-}
-
-function computeXor(a,b){
-    if(a===b)
-    {
-        return "0";
-    }
-    return "1";
-}
-
-function computeOr(a,b){
-    if(a==="1" || b==="1"){
-        return "1";
-    }
-    return "0";
-}
-
-function computeMux(a,b,cin,s1,s2){
-    if(s1==="0" && s2==="0"){
-        let arr = computeFullAdder(a,b,cin);
-        return arr[0];
-    }
-    else if(s1==="0" && s2==="1"){
-        return computeAnd(a,b);
-    }
-    else if(s1==="1" && s2==="0"){
-        return computeOr(a,b);
-    }
-    else if(s1==="1" && s2==="1"){
-        return computeXor(a,b);
-    }
-
-}
-
 function halfStage() {
-    setter(computeAnd(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[1]);
-    setter(computeOr(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[2]);
-    setter(computeXor(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[3]);
-    let arr = computeFullAdder(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent);
+    setter(calculateAnd(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[1]);
+    setter(calculateOr(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[2]);
+    setter(calculateXor(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[3]);
+    let arr = calculateFullAdder(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent);
     setter(arr[0],DOTS[0]);
     setter(arr[1],DOTS[4]);
 }
@@ -290,20 +254,20 @@ function fullStage(){
             objectDisappear(DOTS[i]);
         }   
     }
-    setter(computeMux(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent,TEXTINPUT[3].textContent,TEXTINPUT[4].textContent),DOTS[10])
+    setter(calculateMux(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent,TEXTINPUT[3].textContent,TEXTINPUT[4].textContent),DOTS[10])
 }
 
 function outputSetter(){
     inputDotDisappear();
-    let arr = computeFullAdder(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent);
+    let arr = calculateFullAdder(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent);
     TEXTOUTPUT[0].textContent = arr[1];
-    TEXTOUTPUT[1].textContent = computeMux(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent,TEXTINPUT[3].textContent,TEXTINPUT[4].textContent);
+    TEXTOUTPUT[1].textContent = calculateMux(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent,TEXTINPUT[3].textContent,TEXTINPUT[4].textContent);
     setter(TEXTOUTPUT[0].textContent,OBJECTS[5]);
     setter(TEXTOUTPUT[1].textContent,OBJECTS[6]);
 }
 
 function display() {
-    OBSERV.innerHTML = "Simulation has finished. Press Restart to start again"
+    observ.innerHTML = "Simulation has finished. Press Restart to start again"
 }
 
 function reboot() {
@@ -321,30 +285,11 @@ function setter(value, component) {
     }
 }
 
-function changeSpeed(newSpeed){
-    if (TEXTINPUT[0].textContent !== "2" && timeline.progress() !== 1) {
-        timeline.resume();
-        timeline.timeScale(newSpeed);
-        decide = true;
-        STATUS.innerHTML = "Pause";
-    }
-}
 function setSpeed(speed) {
     if (circuitStarted) {
-        if (speed === "1") {
-            changeSpeed(1);
-            OBSERV.innerHTML = "1x speed";
-        }
-        else if (speed === "2") {
-            changeSpeed(2);
-            OBSERV.innerHTML = "2x speed";
-        }
-        else if (speed === "4") {
-            changeSpeed(4);
-            OBSERV.innerHTML = "4x speed";
-        }
+        timeline.timeScale(parseInt(speed));
+        observ.innerHTML = `${speed}x speed`;
     }
-
 }
 
 function restartCircuit() {
@@ -357,9 +302,9 @@ function restartCircuit() {
     reboot();
     clearObservation();
     decide = false;
-    STATUS.innerHTML = "Start";
-    OBSERV.innerHTML = "Successfully restored";
-    SPEED.selectedIndex = 0;
+    status.innerHTML = "Start";
+    observ.innerHTML = "Successfully restored";
+    speed.selectedIndex = 0;
 }
 
 function simulationStatus() {
@@ -373,19 +318,19 @@ function simulationStatus() {
 function stopCircuit() {
     if (timeline.time() !== 0 && timeline.progress() !== 1) {
         timeline.pause();
-        OBSERV.innerHTML = "Simulation has been stopped.";
+        observ.innerHTML = "Simulation has been stopped.";
         decide = false;
-        STATUS.innerHTML = "Start";
-        SPEED.selectedIndex = 0;
+        status.innerHTML = "Start";
+        speed.selectedIndex = 0;
     }
     else if (timeline.progress() === 1) {
-        OBSERV.innerHTML = "Please Restart the simulation";
+        observ.innerHTML = "Please Restart the simulation";
     }
 }
 function startCircuit() {
     for(const text of TEXTINPUT){
         if (text.textContent === "2") {
-            OBSERV.innerHTML = "Please set the input values";
+            observ.innerHTML = "Please set the input values";
             return;
         }
     }
@@ -395,21 +340,21 @@ function startCircuit() {
         }
         timeline.play();
         timeline.timeScale(1);
-        OBSERV.innerHTML = "Simulation has started.";
+        observ.innerHTML = "Simulation has started.";
         decide = true;
-        STATUS.innerHTML = "Pause";
-        SPEED.selectedIndex = 0;
+        status.innerHTML = "Pause";
+        speed.selectedIndex = 0;
     }
     else if (timeline.progress() === 1) {
-        OBSERV.innerHTML = "Please Restart the simulation";
+        observ.innerHTML = "Please Restart the simulation";
     }
 }
 
 // all the execution begin here
+let timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 gsap.registerPlugin(MotionPathPlugin);
 demoWidth();
 // calling all the functions that are going to initialise 
-instructionBoxInit();
 textIOInit();
 outputCoordinates();
 inputDots();

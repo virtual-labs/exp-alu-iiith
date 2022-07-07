@@ -92,12 +92,8 @@ window.changeTabs = changeTabs;
 // Toolbar
 
 function updateToolbar() {
-  let elem = "";
-  if (window.currentTab === "task1") {
-    elem =
+  let elem = 
       '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button fulladder" onclick="addFA(event)"></div><div class="component-button mux" onclick="addMux(event)"></div>';
-  } 
-
   document.getElementById("toolbar").innerHTML = elem;
 }
 
@@ -105,12 +101,7 @@ function updateToolbar() {
 function clearObservations() {
   document.getElementById("table-body").innerHTML = "";
   let head = "";
-
-  if (window.currentTab === "task1") {
-    head =
-      '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
-  } 
-
+    '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
   document.getElementById("table-head").innerHTML = head;
   document.getElementById("result").innerHTML = "";
 }
