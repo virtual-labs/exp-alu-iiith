@@ -199,5 +199,5 @@ export function deleteFA(id) {
         gates[elem].removeInput(fa);
     }
   }
-  delete fullAdder[key]; 
+  delete fullAdder[id]; 
 }

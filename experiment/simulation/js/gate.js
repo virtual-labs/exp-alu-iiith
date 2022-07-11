@@ -10,6 +10,7 @@ import {
     validateAlu
 } from "./validator.js";
 import { clearResult, getOutputMux, mux } from "./mux.js";
+import { fullAdder } from "./fa.js";
 'use strict';
 export let gates = {}; // Dictionary of gates with their IDs as keys
 window.numComponents = 0;

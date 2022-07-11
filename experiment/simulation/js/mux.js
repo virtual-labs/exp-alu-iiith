@@ -434,5 +434,5 @@ export function deleteMux(id) {
             gates[elem].removeInput(muxComponent);
         }
     }
-    delete mux[key];
+    delete mux[id];
 }
