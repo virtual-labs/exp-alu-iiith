@@ -1,0 +1,77 @@
+{
+    "version": 2.0,
+    "questions": [
+        {
+            "question": "1. What operation will be performed when S1 is set and S0 is unset:",
+            "answers": {
+                "a": "SUM",
+                "b": "AND",
+                "c": "OR",
+                "d": "XOR"
+            },
+            "correctAnswer": "c",
+            "explanations": {
+                "a":"At S1=0 and S0=0, the operation selected is SUM",
+                "b":"At S1=0 and S0=1 the operation selected is AND.",
+                "c":"At S1=1 and S0=0 the operation selected is OR.",
+                "d":"At S1=1 and S0=1 the operation selected is XOR."},
+            "difficulty": "beginner"
+        },
+        {
+            "question": "2. What operation will be performed when S1 and S0 are both set :",
+            "answers": {
+                "a": "SUM",
+                "b": "AND",
+                "c": "OR",
+                "d": "XOR"
+            },
+            "correctAnswer": "d",
+            "explanations": {
+                "a":"At S1=0 and S0=0, the operation selected is SUM",
+                "b":"At S1=0 and S0=1 the operation selected is AND.",
+                "c":"At S1=1 and S0=0 the operation selected is OR.",
+                "d":"At S1=1 and S0=1 the operation selected is XOR."},
+            "difficulty": "beginner"
+        },
+        {
+            "question": "2. What operation will be performed when S1 and S0 are both unset :",
+            "answers": {
+                "a": "SUM",
+                "b": "AND",
+                "c": "OR",
+                "d": "XOR"
+            },
+            "correctAnswer": "a",
+            "explanations": {
+                "a":"At S1=0 and S0=0, the operation selected is SUM",
+                "b":"At S1=0 and S0=1 the operation selected is AND.",
+                "c":"At S1=1 and S0=0 the operation selected is OR.",
+                "d":"At S1=1 and S0=1 the operation selected is XOR."},
+            "difficulty": "beginner"
+        },
+        {
+            "question": "4. For A=1,B=1,S1=0,S0=0 and Cin =1 values of Cout and Output are:",
+            "answers": {
+                "a": "1,1",
+                "b": "0,0",
+                "c": "1,0",
+                "d": "0,1"
+            },
+            "correctAnswer": "a",
+            "explanations": {"a":"Since S1=0,S0=0 SUM operation will be selected so Cout=1 and Output=1."},
+            "difficulty": "advanced"
+        },
+        {
+            "question": "5. For A=1,B=1,S1=1,S0=1 and Cin =1 values of Cout and Output are:",
+            "answers": {
+                "a": "1,1",
+                "b": "0,0",
+                "c": "1,0",
+                "d": "0,1"
+            },
+            "correctAnswer": "c",
+            "explanations": {"c":"Since S1=1 and S0=1, XOR operation will be selected so Cout=1 and Output=0."},
+            "difficulty": "intermediate"
+        }
+    ]
+}
