@@ -374,6 +374,10 @@ export function clearResult() {
     const result = document.getElementById("result");
     result.innerHTML = "";
     result.className = "";
+    document.getElementById("table-body").innerHTML = "";
+    let head = 
+        '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
+    document.getElementById("table-head").innerHTML = head;
 }
 
 // Delete Mux
@@ -384,7 +388,6 @@ export function deleteMux(id) {
 
     for(let key in mux) {
         if(mux[key].id === id) {
-            delete mux[key];
             continue;
         }
         if(mux[key].i0[0] === muxComponent) {
@@ -431,4 +434,5 @@ export function deleteMux(id) {
             gates[elem].removeInput(muxComponent);
         }
     }
+    delete mux[id];
 }

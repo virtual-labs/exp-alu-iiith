@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.7-b/css/style.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.8-b/css/style.min.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
 
@@ -37,16 +37,17 @@
 
         <div class="columns is-centered">
             <div class="column">
-                <div class="v-instruction-container instructions-box">
-                    <div class="v-instruction-title" id="task-title">ALU Functions</div>
-                    <div class="v-instruction-text" id="task-description">
-                        Simulation of a circuit made for 1-bit ALU
+                <div class="v-collapsible-instruction-container v-instruction-container">
+                    <div class="v-collapsible is-size-5">Instructions</div>
+                    <div class="v-content" style="text-align: left; padding-left: 10%; padding-right: 10%;">
+                        <ul style="list-style: disc;">
+                            <li><b>Start</b>- Starts the simulation after the inputs are properly selected. Default
+                                speed is 1x.</li>
+                            <li>Select the speed through dropdown menu</li>
+                            <li><b>Reset</b> - Resets the simulation</li>
+                            <li>Click on the green input bits to set their values.</li>
+                        </ul>
                     </div>
-                    <p>Start- Starts the simulation. Default speed is 1x. Select the speed through dropdown menu</p>
-                    <p>Reset - Resets the simulation</p>
-                    <p>There are 5 inputs(A,B,Cin,S1 and S2) to be set by the user</p>
-                    <p>The mux calculates sum when s1=0 and s2=0, and when s1=0 ans s2=1, or when s1=1 and s2=0 and xor when s1=1 and s2=1</p>
-                    <p>There are 2 outputs(Cout and F) </p>
                 </div>
             </div>
         </div>
@@ -54,115 +55,85 @@
 
     <div class="columns is-centered">
         <div class="column" style="margin:auto;text-align:center">
-            <div class="v-select">
-                <select autocomplete="off" name="speed" onchange="setSpeed(this.value)" id="speed">
-                    <option value="1">1x</option>
-                    <option value="2">2x</option>
-                    <option value="4">4x</option>
-                </select>
-            </div>
+            <select class="speed-box" autocomplete="off" name="speed" onchange="setSpeed(this.value)" id="speed">
+                <option value="1">1x</option>
+                <option value="2">2x</option>
+                <option value="4">4x</option>
+            </select>
             <button class="v-button" id="play-or-pause" onclick="simulationStatus()">Start</button>
             <button class="v-button" id="restart" onclick="restartCircuit()">Reset</button>
         </div>
     </div>
 
-    <div class="columns is-centered is-flex is-flex-direction-row is-flex-wrap-wrap is-align-content-start">
+    <div class="columns is-centered is-flex-direction-row is-flex-wrap-wrap is-align-content-start">
         <div class="column is-9-desktop is-12-tablet is-12-mobile">
             <div id="circuit-board">
                 <svg class="svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="140%" viewBox="0 85 700 800 ">
-                <rect id="full-adder" x="200" y="180" width="100" height="50"
-                    style="fill:#29e;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <g id="and">
-                    <path fill="#29e" stroke="currentColor" stroke-width="3"
-                    d="M 200 265 v 50 h 50 Q 275 290 250 265 h -50" />
-                </g>
-                <g id="or">
-                    <path stroke="currentColor" fill="#29e" stroke-width="3"
-                        d="M 195 360 M 200 360 Q 235 395 200 430 Q 305 395 200 360" />
-                </g>
-                <g id="xor">
-                    <path stroke="currentColor" fill="#29e" stroke-width="3"
-                        d="M 195 470 Q 230 505 195 540 Q 231 505 195 470 M 200 470 Q 235 505 200 540 Q 305 505 200 470" />
-                </g>
-                <g id="mux">
-                    <path stroke="currentColor" fill="#29e" stroke-width="3"
-                    d="m 500,200 0,0 65,65 0,120 -65,70 z"/>
-                </g>
-                <circle id="inputa" cx="50" cy="110" r="10" onclick="appendInputA()"
-                        style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="inputb" cx="100" cy="110" r="10" onclick="appendInputB()"
-                        style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="cin" cx="250" cy="110" r="10" onclick="appendInputCin()"
-                        style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="cout" cx="680" cy="170" r="10"
-                        style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="outputf" cx="680" cy="350" r="10"
-                        style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="inputs1" cx="520" cy="120" r="10" onclick="appendInputS1()"
-                        style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <circle id="inputs2" cx="550" cy="120" r="10" onclick="appendInputS2()"
-                        style="fill:green;stroke:rgb(68, 68, 119);stroke-width:3;fill-opacity:1;stroke-opacity:1" />
-                <!-- from A0 to full-adder -->
-                <path id="path1" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 50 120  L 50 220 L 200 220" />
-                <!-- from A0 to and -->
-                <path id="path2" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 50 120  L 50 310 L 200 310" />
-                <!-- from A0 to or -->
-                <path id="path3" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 50 120  L 50 410 L 210 410" />
-                <!-- from A0 to xor -->
-                <path id="path4" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 50 120  L 50 510 L 210 510" /> 
-                <!-- from B0 to full-adder -->
-                <path id="path5" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 100 120  L 100 200 L 200 200" />
-                <!-- from B0 to and -->
-                <path id="path6" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 100 120  L 100 290 L 200 290" />
-                <!-- from B0 to or -->
-                <path id="path7" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 100 120  L 100 390 L 215 390" />
-                <!-- from B0 to xor -->
-                <path id="path8" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 100 120  L 100 490 L 210 490" />
-                <!-- from C0 to full-adder -->
-                <path id="path9" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 250 120  L 250 180"/>
-                <!-- from full-adder to outputc-->
-                <path id="path10" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 300 200  L 300 170 L 670 170"/>
-                <!-- from full-adder to mux-->
-                <path id="path11" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 300 200  L 300 250 L 500 250"/>
-                <!-- from and to mux -->
-                <path id="path12" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 264 290  L 500 290"/>
-                <!-- from or to mux -->
-                <path id="path13" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 254 394 L 300 394 L 300 340 L 500 340"/>
-                <!-- from xor to mux -->
-                <path id="path14" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 256 505 L 350 505 L 350 390 L 500 390"/>
-                <!-- from mux to outputf -->
-                <path id="path15" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 565 350 L 670 350"/>
-                <!-- from inputm1 to mux -->
-                <path id="path16" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 520 130  L 520 217"/>
-                <!-- from inputm2 to mux -->
-                <path id="path17" fill="none" stroke="currentColor" stroke-width="3"
-                        d="M 550 130  L 550 245"/>
-                <text font-size="1.5em" x="20" y="110" fill="black">A</text>
-                <text font-size="1.5em" x="110" y="110" fill="black">B</text>
-                <text font-size="1.5em" x="205" y="110" fill="black">Cin</text>
-                <text font-size="1.5em" x="650" y="150" fill="black">Cout</text>
-                <text font-size="1.5em" x="665" y="330" fill="black">F</text>
-                <text font-size="1.5em" x="505" y="110" fill="black">S1</text>
-                <text font-size="1.5em" x="535" y="110" fill="black">S2</text>
-                <text font-size="1.2em" x="210" y="210" fill="black">Full Adder</text>
-                <text font-size="1em" x="500" y="320" fill="black">4*1 MUX</text>
-                </svg>               
+                    <rect id="full-adder" x="200" y="180" width="100" height="50" class="gate-demo" />
+                    <g id="and">
+                        <path class="gate-demo" d="M 200 265 v 50 h 50 Q 275 290 250 265 h -50" />
+                    </g>
+                    <g id="or">
+                        <path class="gate-demo" d="M 195 360 M 200 360 Q 235 395 200 430 Q 305 395 200 360" />
+                    </g>
+                    <g id="xor">
+                        <path class="gate-demo"
+                            d="M 195 470 Q 230 505 195 540 Q 231 505 195 470 M 200 470 Q 235 505 200 540 Q 305 505 200 470" />
+                    </g>
+                    <g id="mux">
+                        <path class="gate-demo" d="m 500,200 0,0 65,65 0,120 -65,70 z" />
+                    </g>
+                    <circle id="inputa" cx="50" cy="110" r="10" onclick="appendInputA()" class="color-green" />
+                    <circle id="inputb" cx="100" cy="110" r="10" onclick="appendInputB()" class="color-green" />
+                    <circle id="cin" cx="250" cy="110" r="10" onclick="appendInputCin()" class="color-green" />
+                    <circle id="cout" cx="680" cy="170" r="10" class="color-green" />
+                    <circle id="outputf" cx="680" cy="350" r="10" class="color-green" />
+                    <circle id="inputs1" cx="520" cy="120" r="10" onclick="appendInputS1()" class="color-green" />
+                    <circle id="inputs2" cx="550" cy="120" r="10" onclick="appendInputS2()" class="color-green" />
+                    <!-- from A0 to full-adder -->
+                    <path id="path1" class="wire-demo" d="M 50 120  L 50 220 L 200 220" />
+                    <!-- from A0 to and -->
+                    <path id="path2" class="wire-demo" d="M 50 120  L 50 310 L 200 310" />
+                    <!-- from A0 to or -->
+                    <path id="path3" class="wire-demo" d="M 50 120  L 50 410 L 210 410" />
+                    <!-- from A0 to xor -->
+                    <path id="path4" class="wire-demo" d="M 50 120  L 50 510 L 210 510" />
+                    <!-- from B0 to full-adder -->
+                    <path id="path5" class="wire-demo" d="M 100 120  L 100 200 L 200 200" />
+                    <!-- from B0 to and -->
+                    <path id="path6" class="wire-demo" d="M 100 120  L 100 290 L 200 290" />
+                    <!-- from B0 to or -->
+                    <path id="path7" class="wire-demo" d="M 100 120  L 100 390 L 215 390" />
+                    <!-- from B0 to xor -->
+                    <path id="path8" class="wire-demo" d="M 100 120  L 100 490 L 210 490" />
+                    <!-- from C0 to full-adder -->
+                    <path id="path9" class="wire-demo" d="M 250 120  L 250 180" />
+                    <!-- from full-adder to outputc-->
+                    <path id="path10" class="wire-demo" d="M 300 200  L 300 170 L 670 170" />
+                    <!-- from full-adder to mux-->
+                    <path id="path11" class="wire-demo" d="M 300 200  L 300 250 L 500 250" />
+                    <!-- from and to mux -->
+                    <path id="path12" class="wire-demo" d="M 264 290  L 500 290" />
+                    <!-- from or to mux -->
+                    <path id="path13" class="wire-demo" d="M 254 394 L 300 394 L 300 340 L 500 340" />
+                    <!-- from xor to mux -->
+                    <path id="path14" class="wire-demo" d="M 256 505 L 350 505 L 350 390 L 500 390" />
+                    <!-- from mux to outputf -->
+                    <path id="path15" class="wire-demo" d="M 565 350 L 670 350" />
+                    <!-- from inputm1 to mux -->
+                    <path id="path16" class="wire-demo" d="M 520 130  L 520 217" />
+                    <!-- from inputm2 to mux -->
+                    <path id="path17" class="wire-demo" d="M 550 130  L 550 245" />
+                    <text x="20" y="110" class="text-demo">A</text>
+                    <text x="110" y="110" class="text-demo">B</text>
+                    <text x="205" y="110" class="text-demo">Cin</text>
+                    <text x="650" y="150" class="text-demo">Cout</text>
+                    <text x="665" y="330" class="text-demo">F</text>
+                    <text x="480" y="125" class="text-demo">S1</text>
+                    <text x="565" y="125" class="text-demo">S0</text>
+                    <text font-size="1.2em" x="210" y="210" fill="black">Full Adder</text>
+                    <text font-size="1em" x="500" y="320" fill="black">4*1 MUX</text>
+                </svg>
             </div>
         </div>
         <div class="column is-3-desktop is-4-tablet is-12-mobile">
@@ -180,6 +151,7 @@
             <li class="menu-option">Cancel</li>
         </ul>
     </div>
+    <script src="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.8-b/js/script.js"></script>
     <script type="module" src="js/animation.js"></script>
 </body>
 

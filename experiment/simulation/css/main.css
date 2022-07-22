@@ -328,6 +328,10 @@ svg.wire path {
   font-weight: bold;
 }
 
+.bold-table{
+  font-weight: bold;
+}
+
 .success-message {
   font-size: 1.2rem;
   color: rgb(31, 170, 31);
@@ -353,9 +357,36 @@ svg.wire path {
 }
 
 .v-instruction-container {
+  border:.2rem solid #97d23d;
   justify-content: flex-start;
 }
 .highlight {
   border:3px solid red;
   box-shadow: 0 0 10px #719ECE;
+}
+.speed-box{
+  border:1px solid black;
+  color:black;
+  background-color:white;
+  text-align:center;
+  font-size:1.0rem;
+  border-radius:1em;
+  padding:.5em 1.0em;
+  cursor:pointer;
+}
+.wire-demo{
+  stroke-width: 3px;
+  fill: none;
+  stroke: black;
+}
+
+.gate-demo{
+  stroke-width: 3px;
+  fill: #29e;
+  stroke: black;
+}
+
+.text-demo{
+  font-size: 1.25em;
+  fill: black;
 }

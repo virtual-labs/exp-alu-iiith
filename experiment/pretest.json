@@ -6,8 +6,8 @@
             "answers": {
                 "a": "Arithmetic",
                 "b": "Combinational Logic",
-                "c": "Cobigram Logic",
-                "d": "Sequential Logic"
+                "c": "Sequential Logic",
+                "d": "None of the above"
             },
             "correctAnswer": "b",
             "explanations": {"b":"ALU is based on the Combinational Logic"},
@@ -22,7 +22,7 @@
                 "d": "None of these"
             },
             "correctAnswer": "c",
-            "explanations": {"c":"The ALU is used to perform arithmetic and logical operations"},
+            "explanations": {"c":"The ALU is used to perform both arithmetic and logical operations"},
             "difficulty": "intermediate"
         },
         {
@@ -58,7 +58,7 @@
                 "d": "All of the above"
             },
             "correctAnswer": "d",
-            "explanations": {"d":"All of the above"},
+            "explanations": {"d":"All of the mentioned tasks can be performed by the modern ALU"},
             "difficulty": "intermediate"
         }
     ]

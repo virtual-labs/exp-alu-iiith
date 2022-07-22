@@ -40,7 +40,7 @@ export const setPosition = ({ top, left }) => {
   toggleMenu("show");
 };
 
-window.addEventListener("click", (e) => {
+window.addEventListener("click", () => {
   if (menuVisible) toggleMenu("hide");
   window.selectedComponent = null;
   window.componentType = null;
@@ -81,8 +81,6 @@ function changeTabs(e) {
     initALU();
     window.simulateMux = simulateMux;
   }
-  
-  updateInstructions();
   updateToolbar();
   clearObservations();
   resize();
@@ -90,22 +88,12 @@ function changeTabs(e) {
 
 window.changeTabs = changeTabs;
 
-function updateInstructions() {
-  if (window.currentTab === "task1") {
-    document.getElementById("task-title").innerHTML = "Full Adder";
-    document.getElementById("task-description").innerHTML = "Implement a 1-bit full adder using logic gates.";
-  } 
-}
 
 // Toolbar
 
 function updateToolbar() {
-  let elem = "";
-  if (window.currentTab === "task1") {
-    elem =
+  let elem = 
       '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button fulladder" onclick="addFA(event)"></div><div class="component-button mux" onclick="addMux(event)"></div>';
-  } 
-
   document.getElementById("toolbar").innerHTML = elem;
 }
 
@@ -113,22 +101,10 @@ function updateToolbar() {
 function clearObservations() {
   document.getElementById("table-body").innerHTML = "";
   let head = "";
-
-  if (window.currentTab === "task1") {
-    head =
-      '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
-  } 
-
+    '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
   document.getElementById("table-head").innerHTML = head;
   document.getElementById("result").innerHTML = "";
 }
-
-// Instruction box
-const instructionBox = document.getElementsByClassName("instructions-box")[0];
-instructionBox.addEventListener("click", (e) => {
-  instructionBox.classList.toggle("expand");
-});
-
 
 // Making webpage responsive
 

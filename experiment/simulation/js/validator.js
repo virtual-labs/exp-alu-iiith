@@ -1,6 +1,6 @@
 "use strict";
-import {gates} from "./gate.js";
-import {fullAdder} from "./fa.js";
+import { gates } from "./gate.js";
+import { fullAdder } from "./fa.js";
 import { checkConnectionsMux, testSimulationMux, mux } from "./mux.js";
 
 // Helper functions
@@ -23,55 +23,51 @@ export function computeNor(a, b) {
     return !(a || b);
 }
 
-function computeFullAdder(a,b,cin){
-    let sum = a+b+cin;
-    if (sum === 0) {
-        return [0,0];
-    }
-    else if (sum === 1) {
-        return [1,0];
-    }
-    else if (sum === 2) {
-        return [0,1];   
-    }
-    else if (sum === 3) {
-        return [1,1];
+function computeFullAdder(a, b, cin) {
+    let sum = a + b + cin;
+    switch (sum) {
+        case 0:
+            return [0, 0];
+        case 1:
+            return [1, 0];
+        case 2:
+            return [0, 1];
+        default:
+            return [1, 1];
     }
 }
 
-function computeMux(s1,s0,a,b,cin){
-    if(s1===0 && s0===0){
-        let arr = computeFullAdder(a,b,cin);
-        return arr[0];
-    }
-    else if(s1===0 && s0===1){
-        return computeAnd(a,b);
-    }
-    else if(s1===1 && s0===0){
-        return computeOr(a,b);
-    }
-    else if(s1===1 && s1===1){
-        if(computeXor(a,b)){
-            return 1;
-        }
-        return 0;
+function computeMux(s1, s0, a, b, cin) {
+    let combinedString = s1.toString()+s0.toString();
+    switch (combinedString) {
+        case "00":
+            return computeFullAdder(a, b, cin)[0];
+        case "01":
+            return computeAnd(a, b);
+        case "10":
+            return computeOr(a, b);
+        default:
+            if(computeXor(a, b)) {
+                return 1;
+            }
+            return 0;
     }
 }
 
-function computeAlu(inputString){
+function computeAlu(inputString) {
     let inputA = parseInt(inputString[0]);
     let inputB = parseInt(inputString[1]);
     let inputCin = parseInt(inputString[2]);
     let inputS0 = parseInt(inputString[3]);
     let inputS1 = parseInt(inputString[4]);
-    let output = computeMux(inputS1,inputS0,inputA,inputB,inputCin);
-    let cout = computeFullAdder(inputA,inputB,inputCin)[1];
+    let output = computeMux(inputS1, inputS0, inputA, inputB, inputCin);
+    let cout = computeFullAdder(inputA, inputB, inputCin)[1];
     let outputString = output.toString() + cout.toString();
     return outputString;
 }
 
 
-export function validateAlu(inputA,inputB,inputCin,inputS1,inputS0,outputOut,outputCout) {
+export function validateAlu(inputA, inputB, inputCin, inputS1, inputS0, outputOut, outputCout) {
     let gates_list = gates;
     let fa_list = fullAdder;
     let mux_list = mux;
@@ -88,12 +84,10 @@ export function validateAlu(inputA,inputB,inputCin,inputS1,inputS0,outputOut,out
 
     document.getElementById("result").innerHTML = "";
 
-    if(!checkConnectionsMux())
-    {
+    if (!checkConnectionsMux()) {
         document.getElementById("table-body").innerHTML = "";
-        let head = "";
-        head =
-            '<tr><th colspan="5">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1</th><th>S0</th><th>A</th><th>B</th><th>C</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
+        let head = 
+            '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
         document.getElementById("table-head").innerHTML = head;
         return;
     }
@@ -109,19 +103,19 @@ export function validateAlu(inputA,inputB,inputCin,inputS1,inputS0,outputOut,out
         S1.setOutput(binary[4] === "1");
 
         // simulate the circuit
-        testSimulationMux(fa_list,gates_list,mux_list);
+        testSimulationMux(fa_list, gates_list, mux_list);
         const out = gates_list[outputOut].output ? 1 : 0;
         const cout = gates_list[outputCout].output ? 1 : 0;
         let outputString = "";
         outputString += out;
         outputString += cout;
         let expectedString = computeAlu(binary);
-        if ( expectedString !== outputString) {
+        if (expectedString !== outputString) {
             circuitIsCorrect = false;
-            dataTable += `<tr><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="failure-table"> ${cout} </td><td class="failure-table"> ${out} </td></tr>`;
+            dataTable += `<tr class="bold-table"><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="failure-table"> ${cout} </td><td class="failure-table"> ${out} </td></tr>`;
         }
-        else{
-            dataTable += `<tr><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="success-table"> ${cout} </td><td class="success-table"> ${out} </td></tr>`;
+        else {
+            dataTable += `<tr class="bold-table"><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="success-table"> ${cout} </td><td class="success-table"> ${out} </td></tr>`;
         }
     }
 

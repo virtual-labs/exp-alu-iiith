@@ -1,4 +1,4 @@
-import { setCoordinates,fillInputDots,fillColor,objectDisappear,objectAppear,setColor,unsetColor} from "./animation-utility.js";
+import { setCoordinates,fillInputDots,fillColor,objectDisappear,objectAppear,setColor,unsetColor,calculateAnd,calculateFullAdder,calculateMux,calculateOr,calculateXor} from "./animation-utility.js";
 'use strict';
 
 window.appendInputA = appendInputA;
@@ -19,22 +19,50 @@ const circuitBoardTop = circuitBoard.offsetTop;
 
 const windowHeight = window.innerHeight;
 const width = window.innerWidth;
-const instructionBox = document.getElementsByClassName("instructions-box")[0];
 
 const svg = document.querySelector(".svg");
 const svgns = "http://www.w3.org/2000/svg";
 
 const EMPTY="";
 // stroing the necessary div elements in const
-const STATUS = document.getElementById("play-or-pause");
-const OBSERV = document.getElementById("observations");
-const SPEED = document.getElementById("speed");
+const status = document.getElementById("play-or-pause");
+const observ = document.getElementById("observations");
+const speed = document.getElementById("speed");
 
 // global varaibles declared here
-const OBJECTS = [document.getElementById("inputa"),document.getElementById("inputb"),document.getElementById("cin"),document.getElementById("inputs1"),document.getElementById("inputs2"),document.getElementById("cout"),document.getElementById("outputf")];
-const TEXTINPUT = [document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text")];
-const TEXTOUTPUT = [document.createElementNS(svgns, "text"),document.createElementNS(svgns, "text")];
-const DOTS = [document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle"),document.createElementNS(svgns, "circle")];
+const objects = [
+    document.getElementById("inputa"),
+    document.getElementById("inputb"),
+    document.getElementById("cin"),
+    document.getElementById("inputs1"),
+    document.getElementById("inputs2"),
+    document.getElementById("cout"),
+    document.getElementById("outputf")
+];
+const textInput = [
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text")
+];
+const textOutput = [
+    document.createElementNS(svgns, "text"),
+    document.createElementNS(svgns, "text")
+];
+const dots = [
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle"),
+    document.createElementNS(svgns, "circle")
+];
 // First 4 dots emerge from input A0
 // Next 4 dots emerge from input B0
 // Next dot emerge from Cin
@@ -43,7 +71,6 @@ const DOTS = [document.createElementNS(svgns, "circle"),document.createElementNS
 // First dot is then used to final output
 
 
-let timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 
 // decide help to decide the speed
 let decide = false;
@@ -61,17 +88,9 @@ function demoWidth() {
     sidePanels[0].style.height = circuitBoard.style.height;
 }
 
-// function to initialise the instruction box
-function instructionBoxInit() {
-    // Instruction box
-    instructionBox.addEventListener("click", () => {
-        instructionBox.classList.toggle("expand");
-    });
-}
-
 // function to initialise the input text i.e. either 0/1 that gets displayed after user click on them
 function textIOInit() {
-    for( const text of TEXTINPUT){
+    for( const text of textInput){
         text.textContent = 2;
     }
 }
@@ -79,15 +98,15 @@ function textIOInit() {
 
 // function to mark the output coordinates
 function outputCoordinates() {
-    setCoordinates(675,174,TEXTOUTPUT[0]);
-    svg.append(TEXTOUTPUT[0]);
-    setCoordinates(675,355,TEXTOUTPUT[1]);
-    svg.append(TEXTOUTPUT[1]);
+    setCoordinates(675,174,textOutput[0]);
+    svg.append(textOutput[0]);
+    setCoordinates(675,355,textOutput[1]);
+    svg.append(textOutput[1]);
 }
 
 // function to mark the input dots
 function inputDots() {
-    for(const dot of DOTS){
+    for(const dot of dots){
         fillInputDots(dot,20,550,15,"#FF0000");
         svg.append(dot);
     }
@@ -95,219 +114,163 @@ function inputDots() {
 
 // function to disappear the input dots
 function inputDotDisappear() {
-    for(const dot of DOTS){
+    for(const dot of dots){
         objectDisappear(dot);
     }
 }
 
 // function to appear the input dots
 function inputDotVisible() {
-    for(const dot of DOTS){
+    for(const dot of dots){
         objectAppear(dot);
     }
 }
 // function to disappear the output text
 function outputDisappear() {
-    for(const text of TEXTOUTPUT){
+    for(const text of textOutput){
         objectDisappear(text);
     }
 }
 // function to appear the output text
 function outputVisible() {
-    for(const text of TEXTOUTPUT){
+    for(const text of textOutput){
         objectAppear(text);
     }
 }
 // function to diappear the input text
 function inputTextDisappear() {
-    for(const text of TEXTINPUT){
+    for(const text of textInput){
         objectDisappear(text);
     }
 }
 
 function clearObservation() {
-    OBSERV.innerHTML = EMPTY;
+    observ.innerHTML = EMPTY;
 }
 function allDisappear() {
     inputDotDisappear();
     outputDisappear();
     inputTextDisappear();
-    for(const object of OBJECTS){
+    for(const object of objects){
         fillColor(object,"#008000");
     }
 }
 
 function appendInputA() {
-    if (TEXTINPUT[0].textContent !== "0" && timeline.progress() === 0) {
+    if (textInput[0].textContent !== "0" && timeline.progress() === 0) {
         changeto0(45,115,0,0);
     }
-    else if (TEXTINPUT[0].textContent !== "1" && timeline.progress() === 0) {
+    else if (textInput[0].textContent !== "1" && timeline.progress() === 0) {
         changeto1(45,115,0,0);
     }
     for(let i=0;i<4;i++){
-        setter(TEXTINPUT[0].textContent,DOTS[i]);
+        setter(textInput[0].textContent,dots[i]);
     }
 }
 function appendInputB() {
-    if (TEXTINPUT[1].textContent !== "0" && timeline.progress() === 0) {
+    if (textInput[1].textContent !== "0" && timeline.progress() === 0) {
         changeto0(95,115,1,1);
     }
-    else if (TEXTINPUT[1].textContent !== "1" && timeline.progress() === 0) {
+    else if (textInput[1].textContent !== "1" && timeline.progress() === 0) {
         changeto1(95,115,1,1);
     }
     for(let i=4;i<8;i++){
-        setter(TEXTINPUT[1].textContent,DOTS[i]);
+        setter(textInput[1].textContent,dots[i]);
     }
 }
 function appendInputCin() {
-    if (TEXTINPUT[2].textContent !== "0" && timeline.progress() === 0) {
+    if (textInput[2].textContent !== "0" && timeline.progress() === 0) {
         changeto0(245,115,2,2);
     }
-    else if (TEXTINPUT[2].textContent !== "1" && timeline.progress() === 0) {
+    else if (textInput[2].textContent !== "1" && timeline.progress() === 0) {
         changeto1(245,115,2,2);
     }
-    setter(TEXTINPUT[2].textContent,DOTS[8]);
+    setter(textInput[2].textContent,dots[8]);
 }
 
 function appendInputS1() {
-    if (TEXTINPUT[3].textContent !== "0" && timeline.progress() === 0) {
+    if (textInput[3].textContent !== "0" && timeline.progress() === 0) {
         changeto0(515,125,3,3);
     }
-    else if (TEXTINPUT[3].textContent !== "1" && timeline.progress() === 0) {
+    else if (textInput[3].textContent !== "1" && timeline.progress() === 0) {
         changeto1(515,125,3,3);
     }
-    setter(TEXTINPUT[3].textContent,DOTS[9]);
+    setter(textInput[3].textContent,dots[9]);
 }
 
 function appendInputS2() {
-    if (TEXTINPUT[4].textContent !== "0" && timeline.progress() === 0) {
+    if (textInput[4].textContent !== "0" && timeline.progress() === 0) {
         changeto0(545,125,4,4);
     }
-    else if (TEXTINPUT[4].textContent !== "1" && timeline.progress() === 0) {
+    else if (textInput[4].textContent !== "1" && timeline.progress() === 0) {
         changeto1(545,125,4,4);
     }
-    setter(TEXTINPUT[4].textContent,DOTS[10]);
+    setter(textInput[4].textContent,dots[10]);
 }
 
 function changeto1(coordinateX,coordinateY,object,textObject) {
-    TEXTINPUT[textObject].textContent = 1;
-    svg.appendChild(TEXTINPUT[textObject]);
-    setCoordinates(coordinateX,coordinateY,TEXTINPUT[textObject]);
-    fillColor(OBJECTS[object],"#29e");
+    textInput[textObject].textContent = 1;
+    svg.appendChild(textInput[textObject]);
+    setCoordinates(coordinateX,coordinateY,textInput[textObject]);
+    fillColor(objects[object],"#29e");
     clearObservation();
-    objectAppear(TEXTINPUT[textObject]);
+    objectAppear(textInput[textObject]);
 }
 
 function changeto0(coordinateX,coordinateY,object,textObject) {
-    TEXTINPUT[textObject].textContent = 0;
-    svg.appendChild(TEXTINPUT[textObject]);
-    setCoordinates(coordinateX,coordinateY,TEXTINPUT[textObject]);
-    fillColor(OBJECTS[object],"#eeeb22");
+    textInput[textObject].textContent = 0;
+    svg.appendChild(textInput[textObject]);
+    setCoordinates(coordinateX,coordinateY,textInput[textObject]);
+    fillColor(objects[object],"#eeeb22");
     clearObservation();
-    objectAppear(TEXTINPUT[textObject]);
-}
-
-function computeFullAdder(a,b,cin) {
-    let sum = parseInt(a) +parseInt(b) + parseInt(cin);
-    if (sum === 0) {
-        return ["0","0"];
-    }
-    else if (sum === 1) {
-        return ["1","0"];
-    }
-    else if (sum === 2) {
-        return ["0","1"];   
-    }
-    else if (sum === 3) {
-        return ["1","1"];
-    }
-
-}
-
-function computeAnd(a,b){
-    if(a==="1" && b==="1"){
-        return "1";
-    }
-    return "0";
-}
-
-function computeXor(a,b){
-    if(a===b)
-    {
-        return "0";
-    }
-    return "1";
-}
-
-function computeOr(a,b){
-    if(a==="1" || b==="1"){
-        return "1";
-    }
-    return "0";
-}
-
-function computeMux(a,b,cin,s1,s2){
-    if(s1==="0" && s2==="0"){
-        let arr = computeFullAdder(a,b,cin);
-        return arr[0];
-    }
-    else if(s1==="0" && s2==="1"){
-        return computeAnd(a,b);
-    }
-    else if(s1==="1" && s2==="0"){
-        return computeOr(a,b);
-    }
-    else if(s1==="1" && s2==="1"){
-        return computeXor(a,b);
-    }
-
+    objectAppear(textInput[textObject]);
 }
 
 function halfStage() {
-    setter(computeAnd(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[1]);
-    setter(computeOr(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[2]);
-    setter(computeXor(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent),DOTS[3]);
-    let arr = computeFullAdder(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent);
-    setter(arr[0],DOTS[0]);
-    setter(arr[1],DOTS[4]);
+    setter(calculateAnd(textInput[0].textContent,textInput[1].textContent),dots[1]);
+    setter(calculateOr(textInput[0].textContent,textInput[1].textContent),dots[2]);
+    setter(calculateXor(textInput[0].textContent,textInput[1].textContent),dots[3]);
+    let arr = calculateFullAdder(textInput[0].textContent,textInput[1].textContent,textInput[2].textContent);
+    setter(arr[0],dots[0]);
+    setter(arr[1],dots[4]);
 }
 
 function partialDotDisappear() {
     for(let i=0;i<9;i++){
-        objectDisappear(DOTS[i]);
+        objectDisappear(dots[i]);
     }
 }
 
 function partialDotAppear(){
     for(let i=0;i<5;i++){
-        objectAppear(DOTS[i]);
+        objectAppear(dots[i]);
     }
 }
 
 function fullStage(){
     for(let i=0;i<10;i++){
         if(i!==4){
-            objectDisappear(DOTS[i]);
+            objectDisappear(dots[i]);
         }   
     }
-    setter(computeMux(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent,TEXTINPUT[3].textContent,TEXTINPUT[4].textContent),DOTS[10])
+    setter(calculateMux(textInput[0].textContent,textInput[1].textContent,textInput[2].textContent,textInput[3].textContent,textInput[4].textContent),dots[10])
 }
 
 function outputSetter(){
     inputDotDisappear();
-    let arr = computeFullAdder(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent);
-    TEXTOUTPUT[0].textContent = arr[1];
-    TEXTOUTPUT[1].textContent = computeMux(TEXTINPUT[0].textContent,TEXTINPUT[1].textContent,TEXTINPUT[2].textContent,TEXTINPUT[3].textContent,TEXTINPUT[4].textContent);
-    setter(TEXTOUTPUT[0].textContent,OBJECTS[5]);
-    setter(TEXTOUTPUT[1].textContent,OBJECTS[6]);
+    let arr = calculateFullAdder(textInput[0].textContent,textInput[1].textContent,textInput[2].textContent);
+    textOutput[0].textContent = arr[1];
+    textOutput[1].textContent = calculateMux(textInput[0].textContent,textInput[1].textContent,textInput[2].textContent,textInput[3].textContent,textInput[4].textContent);
+    setter(textOutput[0].textContent,objects[5]);
+    setter(textOutput[1].textContent,objects[6]);
 }
 
 function display() {
-    OBSERV.innerHTML = "Simulation has finished. Press Restart to start again"
+    observ.innerHTML = "Simulation has finished. Press Restart to start again"
 }
 
 function reboot() {
-    for(const text of TEXTINPUT){
+    for(const text of textInput){
         text.textContent = 2;
     }
 }
@@ -321,30 +284,11 @@ function setter(value, component) {
     }
 }
 
-function changeSpeed(newSpeed){
-    if (TEXTINPUT[0].textContent !== "2" && timeline.progress() !== 1) {
-        timeline.resume();
-        timeline.timeScale(newSpeed);
-        decide = true;
-        STATUS.innerHTML = "Pause";
-    }
-}
 function setSpeed(speed) {
     if (circuitStarted) {
-        if (speed === "1") {
-            changeSpeed(1);
-            OBSERV.innerHTML = "1x speed";
-        }
-        else if (speed === "2") {
-            changeSpeed(2);
-            OBSERV.innerHTML = "2x speed";
-        }
-        else if (speed === "4") {
-            changeSpeed(4);
-            OBSERV.innerHTML = "4x speed";
-        }
+        timeline.timeScale(parseInt(speed));
+        observ.innerHTML = `${speed}x speed`;
     }
-
 }
 
 function restartCircuit() {
@@ -357,9 +301,9 @@ function restartCircuit() {
     reboot();
     clearObservation();
     decide = false;
-    STATUS.innerHTML = "Start";
-    OBSERV.innerHTML = "Successfully restored";
-    SPEED.selectedIndex = 0;
+    status.innerHTML = "Start";
+    observ.innerHTML = "Successfully restored";
+    speed.selectedIndex = 0;
 }
 
 function simulationStatus() {
@@ -373,19 +317,19 @@ function simulationStatus() {
 function stopCircuit() {
     if (timeline.time() !== 0 && timeline.progress() !== 1) {
         timeline.pause();
-        OBSERV.innerHTML = "Simulation has been stopped.";
+        observ.innerHTML = "Simulation has been stopped.";
         decide = false;
-        STATUS.innerHTML = "Start";
-        SPEED.selectedIndex = 0;
+        status.innerHTML = "Start";
+        speed.selectedIndex = 0;
     }
     else if (timeline.progress() === 1) {
-        OBSERV.innerHTML = "Please Restart the simulation";
+        observ.innerHTML = "Please Restart the simulation";
     }
 }
 function startCircuit() {
-    for(const text of TEXTINPUT){
+    for(const text of textInput){
         if (text.textContent === "2") {
-            OBSERV.innerHTML = "Please set the input values";
+            observ.innerHTML = "Please set the input values";
             return;
         }
     }
@@ -395,21 +339,21 @@ function startCircuit() {
         }
         timeline.play();
         timeline.timeScale(1);
-        OBSERV.innerHTML = "Simulation has started.";
+        observ.innerHTML = "Simulation has started.";
         decide = true;
-        STATUS.innerHTML = "Pause";
-        SPEED.selectedIndex = 0;
+        status.innerHTML = "Pause";
+        speed.selectedIndex = 0;
     }
     else if (timeline.progress() === 1) {
-        OBSERV.innerHTML = "Please Restart the simulation";
+        observ.innerHTML = "Please Restart the simulation";
     }
 }
 
 // all the execution begin here
+let timeline = gsap.timeline({ repeat: 0, repeatDelay: 0 });
 gsap.registerPlugin(MotionPathPlugin);
 demoWidth();
 // calling all the functions that are going to initialise 
-instructionBoxInit();
 textIOInit();
 outputCoordinates();
 inputDots();
@@ -424,7 +368,7 @@ timeline.add(outputSetter,26);
 timeline.add(outputVisible,27);
 timeline.eventCallback("onComplete", outputVisible);
 timeline.eventCallback("onComplete", display);
-timeline.to(DOTS[0], {
+timeline.to(dots[0], {
     motionPath: {
         path: "#path1",
         align: "#path1",
@@ -438,7 +382,7 @@ timeline.to(DOTS[0], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[1], {
+timeline.to(dots[1], {
     motionPath: {
         path: "#path2",
         align: "#path2",
@@ -452,7 +396,7 @@ timeline.to(DOTS[1], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[2], {
+timeline.to(dots[2], {
     motionPath: {
         path: "#path3",
         align: "#path3",
@@ -466,7 +410,7 @@ timeline.to(DOTS[2], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[3], {
+timeline.to(dots[3], {
     motionPath: {
         path: "#path4",
         align: "#path4",
@@ -480,7 +424,7 @@ timeline.to(DOTS[3], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[4], {
+timeline.to(dots[4], {
     motionPath: {
         path: "#path5",
         align: "#path5",
@@ -494,7 +438,7 @@ timeline.to(DOTS[4], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[5], {
+timeline.to(dots[5], {
     motionPath: {
         path: "#path6",
         align: "#path6",
@@ -508,7 +452,7 @@ timeline.to(DOTS[5], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[6], {
+timeline.to(dots[6], {
     motionPath: {
         path: "#path7",
         align: "#path7",
@@ -522,7 +466,7 @@ timeline.to(DOTS[6], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[7], {
+timeline.to(dots[7], {
     motionPath: {
         path: "#path8",
         align: "#path8",
@@ -536,7 +480,7 @@ timeline.to(DOTS[7], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[8], {
+timeline.to(dots[8], {
     motionPath: {
         path: "#path9",
         align: "#path9",
@@ -550,7 +494,7 @@ timeline.to(DOTS[8], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[9], {
+timeline.to(dots[9], {
     motionPath: {
         path: "#path16",
         align: "#path16",
@@ -564,7 +508,7 @@ timeline.to(DOTS[9], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[10], {
+timeline.to(dots[10], {
     motionPath: {
         path: "#path17",
         align: "#path17",
@@ -578,7 +522,7 @@ timeline.to(DOTS[10], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[0], {
+timeline.to(dots[0], {
     motionPath: {
         path: "#path11",
         align: "#path11",
@@ -593,7 +537,7 @@ timeline.to(DOTS[0], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[1], {
+timeline.to(dots[1], {
     motionPath: {
         path: "#path12",
         align: "#path12",
@@ -608,7 +552,7 @@ timeline.to(DOTS[1], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[2], {
+timeline.to(dots[2], {
     motionPath: {
         path: "#path13",
         align: "#path13",
@@ -623,7 +567,7 @@ timeline.to(DOTS[2], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[3], {
+timeline.to(dots[3], {
     motionPath: {
         path: "#path14",
         align: "#path14",
@@ -638,7 +582,7 @@ timeline.to(DOTS[3], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[4], {
+timeline.to(dots[4], {
     motionPath: {
         path: "#path10",
         align: "#path10",
@@ -653,7 +597,7 @@ timeline.to(DOTS[4], {
     ease: "none",
     paused: false,
 }, 0);
-timeline.to(DOTS[10], {
+timeline.to(dots[10], {
     motionPath: {
         path: "#path15",
         align: "#path15",

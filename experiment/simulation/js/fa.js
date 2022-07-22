@@ -155,7 +155,6 @@ export function deleteFA(id) {
 
   for (let key in fullAdder) {
     if (fullAdder[key].id === id) {
-      delete fullAdder[key];
       continue;
     }
     if (fullAdder[key].a0[0] === fa) {
@@ -199,5 +198,6 @@ export function deleteFA(id) {
     if (found === 1) {
         gates[elem].removeInput(fa);
     }
-  } 
+  }
+  delete fullAdder[id]; 
 }

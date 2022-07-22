@@ -9,8 +9,12 @@
                 "c": "OR",
                 "d": "XOR"
             },
-            "correctAnswer": "b",
-            "explanations": {"b":"At S1=1 and S0=0 the operation selected is AND."},
+            "correctAnswer": "c",
+            "explanations": {
+                "a":"At S1=0 and S0=0, the operation selected is SUM",
+                "b":"At S1=0 and S0=1 the operation selected is AND.",
+                "c":"At S1=1 and S0=0 the operation selected is OR.",
+                "d":"At S1=1 and S0=1 the operation selected is XOR."},
             "difficulty": "beginner"
         },
         {
@@ -22,7 +26,11 @@
                 "d": "XOR"
             },
             "correctAnswer": "d",
-            "explanations": {"d":"At S1=1 and S0=1 the operation selected is XOR."},
+            "explanations": {
+                "a":"At S1=0 and S0=0, the operation selected is SUM",
+                "b":"At S1=0 and S0=1 the operation selected is AND.",
+                "c":"At S1=1 and S0=0 the operation selected is OR.",
+                "d":"At S1=1 and S0=1 the operation selected is XOR."},
             "difficulty": "beginner"
         },
         {
@@ -34,7 +42,11 @@
                 "d": "XOR"
             },
             "correctAnswer": "a",
-            "explanations": {"a":"At S1=0 and S0=0 the operation selected is SUM."},
+            "explanations": {
+                "a":"At S1=0 and S0=0, the operation selected is SUM",
+                "b":"At S1=0 and S0=1 the operation selected is AND.",
+                "c":"At S1=1 and S0=0 the operation selected is OR.",
+                "d":"At S1=1 and S0=1 the operation selected is XOR."},
             "difficulty": "beginner"
         },
         {
