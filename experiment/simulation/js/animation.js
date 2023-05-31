@@ -266,7 +266,7 @@ function outputSetter(){
 }
 
 function display() {
-    observ.innerHTML = "Simulation has finished. Press Restart to start again"
+    observ.innerHTML = "Simulation has finished. Please click on Reset and repeat the instructions given to start again."
 }
 
 function reboot() {
@@ -317,7 +317,7 @@ function simulationStatus() {
 function stopCircuit() {
     if (timeline.time() !== 0 && timeline.progress() !== 1) {
         timeline.pause();
-        observ.innerHTML = "Simulation has been stopped.";
+        observ.innerHTML = "Simulation has been Paused. Please click on the 'Start' button to Resume.";
         decide = false;
         status.innerHTML = "Start";
         speed.selectedIndex = 0;
