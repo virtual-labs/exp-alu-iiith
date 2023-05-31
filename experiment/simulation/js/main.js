@@ -58,6 +58,9 @@ export const connectMux = function () {
       return false;
     } else if (start_uuid === "output" && end_uuid === "output") {
       return false;
+    } else if ((end_uuid==="input" && toEndpoint.connections.length > 0) || (start_uuid==="input" && fromEndpoint.connections.length>1)) {
+      // If it already has a connection, do not establish a new connection
+      return false;
     } else {
       jsPlumbInstance.connect({ uuids: [fromEndpoint.uuid, toEndpoint.uuid], paintStyle: { stroke: wireColours[num_wires], strokeWidth: 4 } });
       num_wires++;
