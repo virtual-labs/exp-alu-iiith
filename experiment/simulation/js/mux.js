@@ -341,6 +341,13 @@ export function simulateMux() {
             }
         }
     }
+
+    // Displays message confirming Simulation completion
+    let message = "Simulation has finished";
+    const result = document.getElementById('result');
+    result.innerHTML += message;
+    result.className = "success-message";
+    setTimeout(clearResult, 2000);
 }
 
 // Simulates the circuit for given fulladders and gates; Used for testing the circuit for all values
