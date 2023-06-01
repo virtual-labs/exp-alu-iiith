@@ -32,6 +32,7 @@ export class Gate {
         this.inputPoints = [];
         this.outputPoints = [];
         this.inputs = []; // List of input gates
+        this.outputs=[];
         this.output = null; // Output value
         this.isInput = false;
         this.isOutput = false;
@@ -46,21 +47,26 @@ export class Gate {
         this.inputs.push([gate, pos]);
     }
 
+    addOutput(gate) {
+    this.outputs.push(gate);
+  }
+
     // Removes input from the gate
     removeInput(gate) {
-        let index = -1;
-        let i = 0;
-        for (let input in this.inputs) {
-            if (this.inputs[input][0] === gate) {
-                index = i;
-                break;
+        for (let i = this.inputs.length - 1; i >= 0; i--) {
+            if (this.inputs[i][0] === gate) {
+              this.inputs.splice(i, 1);
             }
-            i++;
-        }
+            }
+    }
 
-        if (index > -1) {
-            this.inputs.splice(index, 1);
-        }
+    removeOutput(gate) {
+      // Find and remove all occurrences of gate
+    for (let i = this.outputs.length - 1; i >= 0; i--) {
+      if (this.outputs[i] === gate) {
+        this.outputs.splice(i, 1);
+      }
+    }
     }
     updatePosition(id) {
         this.positionY =
@@ -244,9 +250,11 @@ export function deleteElement(gateid) {
     jsPlumbInstance.removeAllEndpoints(document.getElementById(gate.id));
     jsPlumbInstance._removeElement(document.getElementById(gate.id));
     for (let elem in gates) {
-        if (gates[elem].inputs.includes(gate)) {
             gates[elem].removeInput(gate);
+        if(gates[elem].outputs.includes(gate)) {
+            gates[elem].removeOutput(gate);
         }
+    
     }
     for(let key in mux){
         if(mux[key].i0[0] === gate) {
@@ -267,6 +275,9 @@ export function deleteElement(gateid) {
         if(mux[key].s1[0] === gate) {
             mux[key].s1 = null;
         }
+        if(mux[key].outputs.includes(gate)){
+            mux[key].removeOutput(gate);
+        }
     }
     for (let key in fullAdder) {
         if (fullAdder[key].a0[0] === gate) {
@@ -277,6 +288,12 @@ export function deleteElement(gateid) {
         }
         if (fullAdder[key].cin[0] === gate) {
             fullAdder[key].cin = null;
+        }
+       if(fullAdder[key].outCout.includes(gate)){
+        fullAdder[key].removeoutCout(gate);
+        }
+       if(fullAdder[key].outSum.includes(gate)){
+        fullAdder[key].removeoutSum(gate);
        }
     }
     delete gates[gateid];
