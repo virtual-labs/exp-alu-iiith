@@ -32,6 +32,7 @@ export class Gate {
         this.inputPoints = [];
         this.outputPoints = [];
         this.inputs = []; // List of input gates
+
         this.outputs=[];
         this.output = null; // Output value
         this.isInput = false;
@@ -67,6 +68,7 @@ export class Gate {
         this.outputs.splice(i, 1);
       }
     }
+
     }
     updatePosition(id) {
         this.positionY =
@@ -221,6 +223,7 @@ export function submitCircuit() {
     clearResult();
     document.getElementById("table-body").innerHTML = "";
 
+
     if (window.currentTab === "task1") {
         validateAlu("Input-0", "Input-1", "Input-2","Input-3","Input-4", "Output-5", "Output-6");
     }
@@ -250,11 +253,11 @@ export function deleteElement(gateid) {
     jsPlumbInstance.removeAllEndpoints(document.getElementById(gate.id));
     jsPlumbInstance._removeElement(document.getElementById(gate.id));
     for (let elem in gates) {
+
             gates[elem].removeInput(gate);
         if(gates[elem].outputs.includes(gate)) {
             gates[elem].removeOutput(gate);
         }
-    
     }
     for(let key in mux){
         if(mux[key].i0[0] === gate) {
@@ -275,6 +278,7 @@ export function deleteElement(gateid) {
         if(mux[key].s1[0] === gate) {
             mux[key].s1 = null;
         }
+
         if(mux[key].outputs.includes(gate)){
             mux[key].removeOutput(gate);
         }
