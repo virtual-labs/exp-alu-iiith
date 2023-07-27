@@ -23,6 +23,7 @@
             },
             "correctAnswer": "c",
             "explanations": {"c":"The ALU is used to perform both arithmetic (such as addition, subtraction etc) and logical (such as AND, OR, EXOR etc) operations."},
+
             "difficulty": "intermediate"
         },
         {
@@ -47,6 +48,7 @@
             },
             "correctAnswer": "a",
             "explanations": {"a":"The fundamental operation of addition is implemented using adders in an ALU, making it the basic building block for arithmetic operations in a computer."},
+
             "difficulty": "Intermediate"
         },
         {

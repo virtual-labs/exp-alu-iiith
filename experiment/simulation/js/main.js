@@ -58,9 +58,11 @@ export const connectMux = function () {
       return false;
     } else if (start_uuid === "output" && end_uuid === "output") {
       return false;
+
     } else if ((end_uuid==="input" && toEndpoint.connections.length > 0) || (start_uuid==="input" && fromEndpoint.connections.length>1)) {
       // If it already has a connection, do not establish a new connection
       return false;
+
     } else {
       jsPlumbInstance.connect({ uuids: [fromEndpoint.uuid, toEndpoint.uuid], paintStyle: { stroke: wireColours[num_wires], strokeWidth: 4 } });
       num_wires++;
@@ -93,7 +95,9 @@ export const connectMux = function () {
           else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[toEndpoint.elementId].setS1([input, pos]);
           }
+
           input.addOutput(muxjs.mux[toEndpoint.elementId]);
+
           
         } else if (end_uuid === "output") {
           const input = muxjs.mux[toEndpoint.elementId];
@@ -121,7 +125,9 @@ export const connectMux = function () {
           else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[fromEndpoint.elementId].setS1([input, pos]);
           }
+
           input.addOutput(muxjs.mux[fromEndpoint.elementId]);
+
         }
       }
       else if (start_type === "Mux" && end_type === "Input") {
@@ -147,7 +153,9 @@ export const connectMux = function () {
           else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[fromEndpoint.elementId].setS1([input, pos]);
           }
+
           input.addOutput(muxjs.mux[fromEndpoint.elementId]);
+
         }
       }
       else if (start_type === "Input" && end_type === "Mux") {
@@ -173,7 +181,9 @@ export const connectMux = function () {
           else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[toEndpoint.elementId].setS1([input, pos]);
           }
+
           input.addOutput(muxjs.mux[toEndpoint.elementId]);
+
         }
       }
       else if (start_type === "Mux" && end_type === "Output") {
@@ -186,7 +196,9 @@ export const connectMux = function () {
           }
           input.setConnected(true, pos);
           output.addInput(input, pos);
+
           input.addOutput(output);
+
         }
       }
       else if (start_type === "Output" && end_type === "Mux") {
@@ -200,7 +212,9 @@ export const connectMux = function () {
           
           input.setConnected(true, pos);
           output.addInput(input, pos);
+
           input.addOutput(output);
+
         }
       }
       else if (start_type === "Input" && end_type === "Output") {
@@ -209,7 +223,9 @@ export const connectMux = function () {
           const output = gatejs.gates[toEndpoint.elementId];
           input.setConnected(true);
           output.addInput(input, "");
+
           input.addOutput(output);
+
         }
       }
       else if (start_type === "Output" && end_type === "Input") {
@@ -223,6 +239,7 @@ export const connectMux = function () {
       }
       else if (start_type === "Mux" && toEndpoint.elementId in gatejs.gates) {
         // connection is started from the outputs of Mux
+
         if (start_uuid === "output") {
           // connection will end at the input of the gate
           const input = muxjs.mux[fromEndpoint.elementId];
@@ -234,7 +251,9 @@ export const connectMux = function () {
           
           input.setConnected(true, pos);
           output.addInput(input, pos);
+
           input.addOutput(output);
+
         }
         // connection is started from the inputs of r-s flipflop
         else if (start_uuid === "input") {
@@ -261,7 +280,9 @@ export const connectMux = function () {
             muxjs.mux[fromEndpoint.elementId].setS1([input, pos]);
           }
           
+
           input.addOutput(muxjs.mux[fromEndpoint].elementId);
+
 
         }
       }
@@ -290,7 +311,9 @@ export const connectMux = function () {
           else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[toEndpoint.elementId].setS1([input, pos]);
           }
+
           input.addOutput(muxjs.mux[toEndpoint.elementId]);
+
 
 
         }
@@ -307,7 +330,9 @@ export const connectMux = function () {
           
           input.setConnected(true, pos);
           output.addInput(input, pos);
+
           input.addOutput(output);
+
         }
       }
       else if (start_type === "Input" && toEndpoint.elementId in gatejs.gates) {
@@ -318,6 +343,7 @@ export const connectMux = function () {
           input.setConnected(true);
           output.addInput(input, "");
           input.addOutput(output);
+
         }
       }
       else if (fromEndpoint.elementId in gatejs.gates && end_type === "Input") {
@@ -326,7 +352,9 @@ export const connectMux = function () {
           const output = gatejs.gates[fromEndpoint.elementId];
           input.setConnected(true);
           output.addInput(input, "");
+
           input.addOutput(output);
+
 
         }
       }
@@ -336,7 +364,9 @@ export const connectMux = function () {
           const output = gatejs.gates[fromEndpoint.elementId];
           input.setConnected(true);
           output.addInput(input, "");
+
           input.addOutput(output);
+
         }
       }
       else if (fromEndpoint.elementId in gatejs.gates && end_type === "Output") {
@@ -345,6 +375,7 @@ export const connectMux = function () {
           const output = gatejs.gates[toEndpoint.elementId];
           input.setConnected(true);
           output.addInput(input, "");
+
           input.addOutput(output);
         }
       }
@@ -356,13 +387,17 @@ export const connectMux = function () {
           const output = gatejs.gates[toEndpoint.elementId];
           input.setConnected(true);
           output.addInput(input, "");
+
           input.addOutput(output);
+
         } else if (end_uuid === "output") {
           const input = gatejs.gates[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
           input.setConnected(true);
           output.addInput(input, "");
+
           input.addOutput(output);
+
         }
       }
       else if (start_type === "FullAdder" && end_type === "FullAdder") {
@@ -371,10 +406,12 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
+
             input.addSum(fajs.fullAdder[toEndpoint.elementId]);
           } else if (Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
             input.addCout(fajs.fullAdder[toEndpoint.elementId]);
+
           }
           input.setConnected(true, pos);
           if (Object.keys(toEndpoint.overlays)[0].includes("a")) {
@@ -415,7 +452,9 @@ export const connectMux = function () {
           } else if (Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[fromEndpoint.elementId].setCin([input, pos]);
           }
+
           input.addOutput(fajs.fullAdder[fromEndpoint.elementId]);
+
         }
       } else if (start_type === "Input" && end_type === "FullAdder") {
         if (start_uuid === "output") {
@@ -429,7 +468,9 @@ export const connectMux = function () {
           } else if (Object.keys(toEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[toEndpoint.elementId].setCin([input, pos]);
           }
+
           input.addOutput(fajs.fullAdder[toEndpoint.elementId]);
+
         }
       } else if (start_type === "FullAdder" && end_type === "Output") {
         if (start_uuid === "output") {
@@ -438,6 +479,7 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
+
             input.addSum(output);
           } else if (Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
@@ -454,10 +496,12 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
+
             input.addSum(output);
           } else if (Object.keys(toEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
             input.addCout(output);
+
           }
           input.setConnected(true, pos);
           output.addInput(input,pos);
@@ -473,6 +517,7 @@ export const connectMux = function () {
           let pos = ""
           if (Object.keys(fromEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
+
             input.addSum(output);
           }
           else if (Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
@@ -498,6 +543,7 @@ export const connectMux = function () {
           else if (Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[fromEndpoint.elementId].setCin([input, pos]);
           }
+
           input.addOutput(fajs.fullAdder[fromEndpoint.elementId]);
         }
       }
@@ -517,6 +563,7 @@ export const connectMux = function () {
           else if (Object.keys(toEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[toEndpoint.elementId].setCin([input, pos]);
           }
+
           input.addOutput(fajs.fullAdder[toEndpoint.elementId]);
         }
         // connection is started from the inputs of gate
@@ -528,11 +575,13 @@ export const connectMux = function () {
           let pos = ""
           if (Object.keys(toEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
+
             input.addCout(output);
           }
           else if (Object.keys(toEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
             input.addSum(output);
+
           }
           input.setConnected(true, pos);
           output.addInput(input, pos);
@@ -557,7 +606,9 @@ export const connectMux = function () {
           else if(Object.keys(toEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[toEndpoint.elementId].setCin([input, pos]);
           }
+
           input.addOutput(fajs.fullAdder[toEndpoint.elementId]);
+
         }
         // connection is started from the inputs of mux
         else if (start_uuid === "input") {
@@ -566,11 +617,13 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
+
             input.addSum(muxjs.mux[fromEndpoint.elementId]);
           }
           else if (Object.keys(toEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
             input.addCout(muxjs.mux[fromEndpoint.elementId]);
+
           }
           input.setConnected(true, pos);
           if (Object.keys(fromEndpoint.overlays)[0].includes("i0")) {
@@ -601,11 +654,13 @@ export const connectMux = function () {
           let pos = "";
           if(Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
+
             input.addCout(muxjs.mux[toEndpoint.elementId]);
           }
           else if(Object.keys(fromEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
             input.addSum(muxjs.mux[toEndpoint.elementId]);
+
           }
           input.setConnected(true, pos);
           if (Object.keys(toEndpoint.overlays)[0].includes("i0")) {
@@ -646,7 +701,9 @@ export const connectMux = function () {
           else if(Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
             output.setCin([input, pos]);
           }
+
           input.addOutput(output);
+
         }
       }
     }

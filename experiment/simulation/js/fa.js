@@ -78,6 +78,7 @@ export class FullAdder {
     this.cin = cin;
   }
 
+
   // adds output gates to which cout and sum are connected
   addCout(gate) {
     this.outCout.push(gate);
@@ -86,7 +87,6 @@ export class FullAdder {
   addSum(gate) {
     this.outSum.push(gate);
   } 
-
   setSum(Sum) {
     this.sum = Sum;
   }
@@ -221,6 +221,7 @@ export function deleteFA(id) {
     if(mux[key].s1[0] === fa) {
         mux[key].s1 = null;
     }
+
     if(mux[key].outputs.includes(fa)){
       mux[key].removeOutput(fa);
     }
@@ -236,6 +237,7 @@ export function deleteFA(id) {
     if (found === 1) {
         gates[elem].removeInput(fa);
     }
+
 
     if(gates[elem].outputs.includes(fa)) {
       gates[elem].removeOutput(fa);
