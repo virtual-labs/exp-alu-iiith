@@ -7,7 +7,6 @@ In this experiment, an Arithmetic and Logic Unit (ALU) capable of performing 4 A
 |S1S0 | ALU Function| Carry| output  |
 |-----|-------------|------|---------|
 |00   | sum         | carry| (A+B)%2 |
-
 |01   | A AND B     | -    |  A & B  |
 |10   | A OR B      | -    |  A \| B |
 |11   | A EXOR B    | -    |  A ^ B  |
