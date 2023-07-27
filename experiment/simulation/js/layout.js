@@ -100,9 +100,9 @@ function updateToolbar() {
 // Clear observations
 function clearObservations() {
   document.getElementById("table-body").innerHTML = "";
-  let head = "";
-    '<tr><th colspan="2">Inputs</th><th colspan="2">Expected Values</th><th colspan="2">Observed Values</th></tr><tr><th>S1S0</th><th>ABC</th><th>cout</th><th>Out</th><th>cout</th><th>Out</th></tr>';
-  document.getElementById("table-head").innerHTML = head;
+
+  document.getElementById("table-head").innerHTML = "";
+
   document.getElementById("result").innerHTML = "";
 }
 

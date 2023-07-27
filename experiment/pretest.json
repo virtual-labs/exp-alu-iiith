@@ -10,7 +10,7 @@
                 "d": "None of the above"
             },
             "correctAnswer": "b",
-            "explanations": {"b":"ALU is based on the Combinational Logic"},
+            "explanations": {"b":"The ALU is primarily based on combinational logic, which means its outputs depend only on the current input values and not on any previous inputs or the internal state of the circuit. Combinational logic circuits are built using logic gates which can be interconnected to perform complex operations. The ALU uses these logic gates to implement various arithmetic operations."},
             "difficulty": "beginner"
         },
         {
@@ -22,7 +22,8 @@
                 "d": "None of these"
             },
             "correctAnswer": "c",
-            "explanations": {"c":"The ALU is used to perform both arithmetic and logical operations"},
+            "explanations": {"c":"The ALU is used to perform both arithmetic (such as addition, subtraction etc) and logical (such as AND, OR, EXOR etc) operations."},
+
             "difficulty": "intermediate"
         },
         {
@@ -46,7 +47,8 @@
                 "d": "Multiplexers"
             },
             "correctAnswer": "a",
-            "explanations": {"a":"Adders are the basic building blocks of an arithmetic logic unit in computers"},
+            "explanations": {"a":"The fundamental operation of addition is implemented using adders in an ALU, making it the basic building block for arithmetic operations in a computer."},
+
             "difficulty": "Intermediate"
         },
         {

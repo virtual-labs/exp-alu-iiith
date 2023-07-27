@@ -15,10 +15,10 @@
 * Connect Cout of full adder to Cout output bit.
 * Drag a MUX and connect its S1 and S0 select lines to S1 and S0 bits.
 * Connect i0 of MUX to "Sum" output of full adder, i1 to output of AND gate, i2 to output of OR gate and i3 to output of XOR gate respectively.
-* Connect output of MUX to output bit and after setting the values of A,B,Cin,S1 and S0 click "Simulate". 
+* Connect output of MUX to output bit and after setting the values of A, B, Cin, S1 and S0, click "Simulate". 
 
 ## Observations - 
 
-* When the simulation gets finished the Cout and and output bits get set according to the values set in A,B,Cin and the select lines S1 and S0 as described in the theory section.
+* When the simulation gets finished the Cout and and output bits get set according to the values set in A, B, Cin and the select lines S1 and S0 as described in the theory section.
 * If the circuit has been made as described as above, then upon clicking the "Submit" button a "Success" message will be displayed.
 

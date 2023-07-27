@@ -3,10 +3,10 @@ This module explains how to build a Programmable 1-bit ALU. In computing, an ari
 <img src="images/ALU_symbol.png">
 
 
-Most ALUs can perform the following operations:
-Bitwise logic operations (AND, NOT, OR, XOR)
-Integer arithmetic operations (addition, subtraction, and sometimes multiplication and division, though this is more expensive)
-Bit-shifting operations (shifting or rotating a word by a specified number of bits to the left or right, with or without sign extension). Shifts can be seen as multiplications and divisions by a power of two.
+Most ALU's can perform the following operations:
+- Bitwise logic operations (AND, NOT, OR, XOR)
+- Integer arithmetic operations (addition, subtraction, and sometimes multiplication and division, though this is more expensive)
+- Bit-shifting operations (shifting or rotating a word by a specified number of bits to the left or right, with or without sign extension). Shifts can be seen as multiplications and divisions by a power of two.
 
 **Inputs and Outputs**
 

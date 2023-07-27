@@ -25,6 +25,8 @@ export class FullAdder {
     this.a0 = []; // Takes 2 items in a list : Gate, Output endpoint of gate
     this.b0 = [];
     this.cin = [];
+    this.outCout = [];
+    this.outSum = [];
     this.sum = null;
     this.cout = null;
     this.inputPoints = [];
@@ -76,6 +78,15 @@ export class FullAdder {
     this.cin = cin;
   }
 
+
+  // adds output gates to which cout and sum are connected
+  addCout(gate) {
+    this.outCout.push(gate);
+  }
+
+  addSum(gate) {
+    this.outSum.push(gate);
+  } 
   setSum(Sum) {
     this.sum = Sum;
   }
@@ -92,6 +103,24 @@ export class FullAdder {
   // Adds the output endpoints to the list of output points
   addOutputPoints(output) {
     this.outputPoints.push(output);
+  }
+
+  // Removes the selected gates from outCout and outSum
+  removeoutCout(gate) {
+    for (let i = this.outCout.length - 1; i >= 0; i--) {
+        if (this.outCout[i] === gate) {
+          this.outCout.splice(i, 1);
+        }
+        }
+}
+
+  removeoutSum(gate) {
+    // Find and remove all occurrences of gate
+  for (let i = this.outSum.length - 1; i >= 0; i--) {
+    if (this.outSum[i] === gate) {
+      this.outSum.splice(i, 1);
+    }
+  }
   }
 
   // Generates the output of the full adder
@@ -166,6 +195,12 @@ export function deleteFA(id) {
     if (fullAdder[key].cin[0] === fa) {
       fullAdder[key].cin = null;
     }
+    if(fullAdder[key].outCout.includes(fa)){
+      fullAdder[key].removeoutCout(fa);
+    }
+    if(fullAdder[key].outSum.includes(fa)){
+      fullAdder[key].removeoutSum(fa);
+ }
   }
   for(let key in mux){
     if(mux[key].i0[0] === fa) {
@@ -186,6 +221,10 @@ export function deleteFA(id) {
     if(mux[key].s1[0] === fa) {
         mux[key].s1 = null;
     }
+
+    if(mux[key].outputs.includes(fa)){
+      mux[key].removeOutput(fa);
+    }
   }
   for (let elem in gates) {
     let found = 0;
@@ -197,6 +236,13 @@ export function deleteFA(id) {
     }
     if (found === 1) {
         gates[elem].removeInput(fa);
+    }
+
+
+    if(gates[elem].outputs.includes(fa)) {
+      gates[elem].removeOutput(fa);
+      if(gates[elem].isInput && gates[elem].outputs.length ===0)
+      gates[elem].setConnected(false);
     }
   }
   delete fullAdder[id]; 
