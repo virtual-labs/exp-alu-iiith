@@ -1,0 +1,67 @@
+{
+    "version": 2.0,
+    "questions": [
+        {
+            "question": "1. ALU is based on the following:",
+            "answers": {
+                "a": "Arithmetic",
+                "b": "Combinational Logic",
+                "c": "Sequential Logic",
+                "d": "None of the above"
+            },
+            "correctAnswer": "b",
+            "explanations": {"b":"The ALU is primarily based on combinational logic, which means its outputs depend only on the current input values and not on any previous inputs or the internal state of the circuit. Combinational logic circuits are built using logic gates which can be interconnected to perform complex operations. The ALU uses these logic gates to implement various arithmetic operations."},
+            "difficulty": "beginner"
+        },
+        {
+            "question": "2. The ALU is used to:",
+            "answers": {
+                "a": "Perform arithmetic operations",
+                "b": "Perform logical operations",
+                "c": "Perform arithmetic and logical operations",
+                "d": "None of these"
+            },
+            "correctAnswer": "c",
+            "explanations": {"c":"The ALU is used to perform both arithmetic (such as addition, subtraction etc) and logical (such as AND, OR, EXOR etc) operations."},
+
+            "difficulty": "intermediate"
+        },
+        {
+            "question": "3. Pick the odd one out",
+            "answers": {
+                "a": "|",
+                "b": ">>",
+                "c": ".",
+                "d": "^"
+            },
+            "correctAnswer": "c",
+            "explanations": {"c":". is the odd one out because it is the only one that is not a bitwise operator"},
+            "difficulty": "advanced"
+        },
+        {
+            "question": "4. Which of the following is the basic building block of an arithmetic logic unit in computers",
+            "answers": {
+                "a": "Adders",
+                "b": "Subtractors",
+                "c": "Multipliers",
+                "d": "Multiplexers"
+            },
+            "correctAnswer": "a",
+            "explanations": {"a":"The fundamental operation of addition is implemented using adders in an ALU, making it the basic building block for arithmetic operations in a computer."},
+
+            "difficulty": "Intermediate"
+        },
+        {
+            "question": "5. Modern ALU can perform:",
+            "answers": {
+                "a": "Data Manipulation",
+                "b": "Exponentiation",
+                "c": "Logarithm",
+                "d": "All of the above"
+            },
+            "correctAnswer": "d",
+            "explanations": {"d":"All of the mentioned tasks can be performed by the modern ALU"},
+            "difficulty": "intermediate"
+        }
+    ]
+}
