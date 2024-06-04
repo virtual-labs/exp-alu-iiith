@@ -9,8 +9,8 @@ let num_wires = 0;
 
 // Gets the coordinates of the mouse
 document.getScroll = function () {
-  if (window.pageYOffset !== undefined) {
-    return [pageXOffset, pageYOffset];
+  if (window.scrollY !== undefined) {
+    return [scrollX, scrollY];
   } else {
     let sx,
       sy,
@@ -30,7 +30,7 @@ export const jsPlumbInstance = jsPlumbBrowserUI.newInstance({
   maxConnections: -1,
   endpoint: {
     type: "Dot",
-    options: { radius: 6 },
+    options: { radius: 5 },
   },
   dragOptions: {
     containment: "parentEnclosed",
@@ -1025,6 +1025,15 @@ export function refreshWorkingArea() {
   gatejs.clearGates();
   fajs.clearFAs();
 }
+
+refresh.addEventListener("click",function(event){
+  jsPlumbInstance.reset();
+  window.numComponents=0;
+  gatejs.clearGates();
+  fajs.clearFAs();
+  console.log(currentTab);
+  if (window.currentTab=="task1") initALU();
+})
 
 // Initialise Task 1 experiment when the page loads
 window.currentTab = "task1";
