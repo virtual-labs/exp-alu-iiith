@@ -1,5 +1,5 @@
 import { registerGate, jsPlumbInstance } from "./main.js";
-import { setPosition } from "./layout.js";
+import { setPosition } from "./main.js";
 import { gates } from "./gate.js";
 import { fullAdder } from "./fa.js";
 

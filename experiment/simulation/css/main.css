@@ -1,6 +1,6 @@
 .window { z-index:20; }
 .jtk-connector { z-index:4; }
-.jtk-connector { z-index:4; stroke-width: 7;}
+.jtk-connector :hover { z-index:4; stroke-width: 7;}
 .jtk-endpoint { z-index:5; }
 .jtk-overlay { z-index:6; }
 
