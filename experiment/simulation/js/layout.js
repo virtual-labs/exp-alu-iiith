@@ -1,12 +1,10 @@
-import { deleteFA } from "./fa.js";
-import { deleteElement } from "./gate.js";
 import {
   connectMux,
   unbindEvent,
   initALU,
   refreshWorkingArea,
 } from "./main.js";
-import { simulateMux,deleteMux } from "./mux.js";
+import { simulateMux} from "./mux.js";
 "use strict";
 // Wires Colours
 export const wireColours = [
@@ -23,45 +21,8 @@ export const wireColours = [
   "#8080ff",
   "#c0c0c0",
 ];
-
 // Contextmenu
-const menu = document.querySelector(".menu");
-const menuOption = document.querySelector(".menu-option");
-let menuVisible = false;
-window.simulateMux = simulateMux;
-const toggleMenu = (command) => {
-  menu.style.display = command === "show" ? "block" : "none";
-  menuVisible = !menuVisible;
-};
-
-export const setPosition = ({ top, left }) => {
-  menu.style.left = `${left}px`;
-  menu.style.top = `${top}px`;
-  toggleMenu("show");
-};
-
-window.addEventListener("click", () => {
-  if (menuVisible) toggleMenu("hide");
-  window.selectedComponent = null;
-  window.componentType = null;
-});
-
-menuOption.addEventListener("click", (e) => {
-  if (e.target.innerHTML === "Delete") {
-    if (window.componentType === "gate") {
-      deleteElement(window.selectedComponent);
-    } else if (window.componentType === "fullAdder") {
-      deleteFA(window.selectedComponent);
-    } else if (window.componentType === "mux") {
-      deleteMux(window.selectedComponent);
-    }
-  }
-  window.selectedComponent = null;
-  window.componentType = null;
-});
-
 // Tabs
-
 function changeTabs(e) {
   const task = e.target.parentNode.id;
   if (window.currentTab === task) {

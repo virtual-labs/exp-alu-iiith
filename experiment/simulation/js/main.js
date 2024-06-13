@@ -2,15 +2,17 @@ import * as gatejs from "./gate.js";
 import * as fajs from "./fa.js";
 import * as muxjs from "./mux.js";
 import { wireColours } from "./layout.js";
-
+import { deleteFA } from "./fa.js";
+import { deleteElement } from "./gate.js";
+import {deleteMux } from "./mux.js";
 "use strict";
 
 let num_wires = 0;
 
 // Gets the coordinates of the mouse
 document.getScroll = function () {
-  if (window.pageYOffset !== undefined) {
-    return [pageXOffset, pageYOffset];
+  if (window.scrollY !== undefined) {
+    return [scrollX, scrollY];
   } else {
     let sx,
       sy,
@@ -30,7 +32,7 @@ export const jsPlumbInstance = jsPlumbBrowserUI.newInstance({
   maxConnections: -1,
   endpoint: {
     type: "Dot",
-    options: { radius: 6 },
+    options: { radius: 5 },
   },
   dragOptions: {
     containment: "parentEnclosed",
@@ -1025,6 +1027,76 @@ export function refreshWorkingArea() {
   gatejs.clearGates();
   fajs.clearFAs();
 }
+
+refresh.addEventListener("click",function(event){
+  jsPlumbInstance.reset();
+  window.numComponents=0;
+  gatejs.clearGates();
+  fajs.clearFAs();
+  console.log(currentTab);
+  if (window.currentTab=="task1") initALU();
+})
+const menu = document.querySelector(".menu");
+const menuOption = document.querySelector(".menu-option");
+let menuVisible = false;
+
+console.log(menu);
+console.log(menuOption);
+console.log(menuVisible);
+
+const toggleMenu = (command) => {
+  menu.style.display = command === "show" ? "block" : "none";
+  menuVisible = command === "show";
+};
+console.log("toggle", toggleMenu);
+
+export const setPosition = ({ top, left }) => {
+  menu.style.left = `${left}px`;
+  menu.style.top = `${top}px`;
+  toggleMenu("show");
+};
+console.log("setPosition", setPosition);
+
+window.addEventListener("click", () => {
+  console.log("menu is ", menuVisible);
+  if (menuVisible) toggleMenu("hide");
+  window.selectedComponent = null;
+  window.componentType = null;
+});
+document.addEventListener('contextmenu', function(event) {
+  event.preventDefault(); // Prevent the default context menu from appearing
+  menu.style.display = "block";
+  menu.style.left = `${event.clientX}px`;
+  menu.style.top = `${event.clientY}px`;
+var elements = document.querySelectorAll(".jtk-connector.jtk-hover");
+menuOption.addEventListener("click", (e) => {
+  console.log("element deleted", elements);
+  if (e.target.innerHTML === "Delete") {
+    if (window.componentType === "gate") {
+      console.log("op1");
+      deleteElement(window.selectedComponent);
+    }
+    else if (window.componentType === "fullAdder")
+      {
+        deleteFA(window.selectedComponent);
+      } 
+      else if (window.componentType === "mux") {
+        deleteMux(window.selectedComponent);
+      }else {
+      console.log("op2");
+      elements.forEach(function(element) {
+        element.parentNode.removeChild(element);
+      });
+    }
+  }
+  // window.selectedComponent = null;
+  // window.componentType = null;
+  toggleMenu("hide"); // Hide menu after selection
+});
+
+
+  toggleMenu("show");
+});
 
 // Initialise Task 1 experiment when the page loads
 window.currentTab = "task1";
