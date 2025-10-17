@@ -4,8 +4,8 @@ import * as muxjs from "./mux.js";
 import { wireColours } from "./layout.js";
 import { deleteFA } from "./fa.js";
 import { deleteElement } from "./gate.js";
-import {deleteMux } from "./mux.js";
-"use strict";
+import { deleteMux } from "./mux.js";
+("use strict");
 
 let num_wires = 0;
 
@@ -41,6 +41,25 @@ export const jsPlumbInstance = jsPlumbBrowserUI.newInstance({
   connector: "Flowchart",
   paintStyle: { strokeWidth: 4, stroke: "#888888" },
   connectionsDetachable: false,
+  containment: true,
+});
+
+// Add connection hover events for deletion
+jsPlumbInstance.bind("connection", function (info) {
+  const connection = info.connection;
+  const connectorElement = connection.connector.canvas;
+
+  if (connectorElement) {
+    // Add hover class on mouse enter
+    connectorElement.addEventListener("mouseenter", function () {
+      connectorElement.classList.add("jtk-hover");
+    });
+
+    // Remove hover class on mouse leave
+    connectorElement.addEventListener("mouseleave", function () {
+      connectorElement.classList.remove("jtk-hover");
+    });
+  }
 });
 
 // This is an event listener for establishing connections between all the components used in this experiment
@@ -60,13 +79,17 @@ export const connectMux = function () {
       return false;
     } else if (start_uuid === "output" && end_uuid === "output") {
       return false;
-
-    } else if ((end_uuid==="input" && toEndpoint.connections.length > 0) || (start_uuid==="input" && fromEndpoint.connections.length>1)) {
+    } else if (
+      (end_uuid === "input" && toEndpoint.connections.length > 0) ||
+      (start_uuid === "input" && fromEndpoint.connections.length > 1)
+    ) {
       // If it already has a connection, do not establish a new connection
       return false;
-
     } else {
-      jsPlumbInstance.connect({ uuids: [fromEndpoint.uuid, toEndpoint.uuid], paintStyle: { stroke: wireColours[num_wires], strokeWidth: 4 } });
+      jsPlumbInstance.connect({
+        uuids: [fromEndpoint.uuid, toEndpoint.uuid],
+        paintStyle: { stroke: wireColours[num_wires], strokeWidth: 4 },
+      });
       num_wires++;
       num_wires = num_wires % wireColours.length;
       const start_type = fromEndpoint.elementId.split("-")[0];
@@ -81,118 +104,90 @@ export const connectMux = function () {
           input.setConnected(true, pos);
           if (Object.keys(toEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[toEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[toEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[toEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[toEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[toEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[toEndpoint.elementId].setS1([input, pos]);
           }
 
           input.addOutput(muxjs.mux[toEndpoint.elementId]);
-
-          
         } else if (end_uuid === "output") {
           const input = muxjs.mux[toEndpoint.elementId];
           let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("output")) {
             pos = "output";
           }
-          
+
           input.setConnected(true, pos);
           if (Object.keys(fromEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[fromEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[fromEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[fromEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[fromEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[fromEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[fromEndpoint.elementId].setS1([input, pos]);
           }
 
           input.addOutput(muxjs.mux[fromEndpoint.elementId]);
-
         }
-      }
-      else if (start_type === "Mux" && end_type === "Input") {
+      } else if (start_type === "Mux" && end_type === "Input") {
         if (end_uuid === "output") {
           const input = gatejs.gates[toEndpoint.elementId];
           input.setConnected(true);
           let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[fromEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[fromEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[fromEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[fromEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[fromEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[fromEndpoint.elementId].setS1([input, pos]);
           }
 
           input.addOutput(muxjs.mux[fromEndpoint.elementId]);
-
         }
-      }
-      else if (start_type === "Input" && end_type === "Mux") {
+      } else if (start_type === "Input" && end_type === "Mux") {
         if (start_uuid === "output") {
           const input = gatejs.gates[fromEndpoint.elementId];
           input.setConnected(true);
           let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[toEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[toEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[toEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[toEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[toEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[toEndpoint.elementId].setS1([input, pos]);
           }
 
           input.addOutput(muxjs.mux[toEndpoint.elementId]);
-
         }
-      }
-      else if (start_type === "Mux" && end_type === "Output") {
+      } else if (start_type === "Mux" && end_type === "Output") {
         if (start_uuid === "output") {
           const input = muxjs.mux[fromEndpoint.elementId];
           const output = gatejs.gates[toEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("output")) {
             pos = "output";
           }
@@ -200,26 +195,22 @@ export const connectMux = function () {
           output.addInput(input, pos);
 
           input.addOutput(output);
-
         }
-      }
-      else if (start_type === "Output" && end_type === "Mux") {
+      } else if (start_type === "Output" && end_type === "Mux") {
         if (start_uuid === "input") {
           const input = muxjs.mux[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("output")) {
             pos = "output";
           }
-          
+
           input.setConnected(true, pos);
           output.addInput(input, pos);
 
           input.addOutput(output);
-
         }
-      }
-      else if (start_type === "Input" && end_type === "Output") {
+      } else if (start_type === "Input" && end_type === "Output") {
         if (start_uuid === "output") {
           const input = gatejs.gates[fromEndpoint.elementId];
           const output = gatejs.gates[toEndpoint.elementId];
@@ -227,10 +218,8 @@ export const connectMux = function () {
           output.addInput(input, "");
 
           input.addOutput(output);
-
         }
-      }
-      else if (start_type === "Output" && end_type === "Input") {
+      } else if (start_type === "Output" && end_type === "Input") {
         if (start_uuid === "input") {
           const input = gatejs.gates[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
@@ -238,24 +227,22 @@ export const connectMux = function () {
           output.addInput(input, "");
           input.addOutput(output);
         }
-      }
-      else if (start_type === "Mux" && toEndpoint.elementId in gatejs.gates) {
+      } else if (start_type === "Mux" && toEndpoint.elementId in gatejs.gates) {
         // connection is started from the outputs of Mux
 
         if (start_uuid === "output") {
           // connection will end at the input of the gate
           const input = muxjs.mux[fromEndpoint.elementId];
           const output = gatejs.gates[toEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("output")) {
             pos = "output";
           }
-          
+
           input.setConnected(true, pos);
           output.addInput(input, pos);
 
           input.addOutput(output);
-
         }
         // connection is started from the inputs of r-s flipflop
         else if (start_uuid === "input") {
@@ -265,30 +252,21 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[fromEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[fromEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[fromEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[fromEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[fromEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[fromEndpoint.elementId].setS1([input, pos]);
           }
-          
 
           input.addOutput(muxjs.mux[fromEndpoint].elementId);
-
-
         }
-      }
-      else if (end_type === "Mux" && fromEndpoint.elementId in gatejs.gates) {
+      } else if (end_type === "Mux" && fromEndpoint.elementId in gatejs.gates) {
         // connection is started from the outputs of gate
         if (start_uuid === "output") {
           // connection will end at the input of r-s flipflop
@@ -297,27 +275,19 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[toEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[toEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[toEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[toEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[toEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[toEndpoint.elementId].setS1([input, pos]);
           }
 
           input.addOutput(muxjs.mux[toEndpoint.elementId]);
-
-
-
         }
         // connection is started from the inputs of gate
         else if (start_uuid === "input") {
@@ -325,30 +295,31 @@ export const connectMux = function () {
 
           const input = muxjs.mux[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("output")) {
             pos = "output";
           }
-          
+
           input.setConnected(true, pos);
           output.addInput(input, pos);
 
           input.addOutput(output);
-
         }
-      }
-      else if (start_type === "Input" && toEndpoint.elementId in gatejs.gates) {
-
+      } else if (
+        start_type === "Input" &&
+        toEndpoint.elementId in gatejs.gates
+      ) {
         if (start_uuid === "output") {
           const input = gatejs.gates[fromEndpoint.elementId];
           const output = gatejs.gates[toEndpoint.elementId];
           input.setConnected(true);
           output.addInput(input, "");
           input.addOutput(output);
-
         }
-      }
-      else if (fromEndpoint.elementId in gatejs.gates && end_type === "Input") {
+      } else if (
+        fromEndpoint.elementId in gatejs.gates &&
+        end_type === "Input"
+      ) {
         if (start_uuid === "input") {
           const input = gatejs.gates[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
@@ -356,11 +327,11 @@ export const connectMux = function () {
           output.addInput(input, "");
 
           input.addOutput(output);
-
-
         }
-      }
-      else if (start_type === "Output" && toEndpoint.elementId in gatejs.gates) {
+      } else if (
+        start_type === "Output" &&
+        toEndpoint.elementId in gatejs.gates
+      ) {
         if (start_uuid === "input") {
           const input = gatejs.gates[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
@@ -368,10 +339,11 @@ export const connectMux = function () {
           output.addInput(input, "");
 
           input.addOutput(output);
-
         }
-      }
-      else if (fromEndpoint.elementId in gatejs.gates && end_type === "Output") {
+      } else if (
+        fromEndpoint.elementId in gatejs.gates &&
+        end_type === "Output"
+      ) {
         if (start_uuid === "output") {
           const input = gatejs.gates[fromEndpoint.elementId];
           const output = gatejs.gates[toEndpoint.elementId];
@@ -380,10 +352,10 @@ export const connectMux = function () {
 
           input.addOutput(output);
         }
-      }
-
-      else if (fromEndpoint.elementId in gatejs.gates && toEndpoint.elementId in gatejs.gates) {
-
+      } else if (
+        fromEndpoint.elementId in gatejs.gates &&
+        toEndpoint.elementId in gatejs.gates
+      ) {
         if (start_uuid === "output") {
           const input = gatejs.gates[fromEndpoint.elementId];
           const output = gatejs.gates[toEndpoint.elementId];
@@ -391,7 +363,6 @@ export const connectMux = function () {
           output.addInput(input, "");
 
           input.addOutput(output);
-
         } else if (end_uuid === "output") {
           const input = gatejs.gates[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
@@ -399,10 +370,8 @@ export const connectMux = function () {
           output.addInput(input, "");
 
           input.addOutput(output);
-
         }
-      }
-      else if (start_type === "FullAdder" && end_type === "FullAdder") {
+      } else if (start_type === "FullAdder" && end_type === "FullAdder") {
         if (start_uuid === "output") {
           const input = fajs.fullAdder[fromEndpoint.elementId];
           let pos = "";
@@ -413,7 +382,6 @@ export const connectMux = function () {
           } else if (Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
             input.addCout(fajs.fullAdder[toEndpoint.elementId]);
-
           }
           input.setConnected(true, pos);
           if (Object.keys(toEndpoint.overlays)[0].includes("a")) {
@@ -456,7 +424,6 @@ export const connectMux = function () {
           }
 
           input.addOutput(fajs.fullAdder[fromEndpoint.elementId]);
-
         }
       } else if (start_type === "Input" && end_type === "FullAdder") {
         if (start_uuid === "output") {
@@ -472,7 +439,6 @@ export const connectMux = function () {
           }
 
           input.addOutput(fajs.fullAdder[toEndpoint.elementId]);
-
         }
       } else if (start_type === "FullAdder" && end_type === "Output") {
         if (start_uuid === "output") {
@@ -488,8 +454,7 @@ export const connectMux = function () {
             input.addCout(output);
           }
           input.setConnected(true, pos);
-          output.addInput(input,pos);
-          
+          output.addInput(input, pos);
         }
       } else if (start_type === "Output" && end_type === "FullAdder") {
         if (start_uuid === "input") {
@@ -503,30 +468,29 @@ export const connectMux = function () {
           } else if (Object.keys(toEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
             input.addCout(output);
-
           }
           input.setConnected(true, pos);
-          output.addInput(input,pos);
-          
+          output.addInput(input, pos);
         }
-      }
-      else if (start_type === "FullAdder" && toEndpoint.elementId in gatejs.gates) {
+      } else if (
+        start_type === "FullAdder" &&
+        toEndpoint.elementId in gatejs.gates
+      ) {
         // connection is started from the outputs of r-s flipflop
         if (start_uuid === "output") {
           // connection will end at the input of the gate
           const input = fajs.fullAdder[fromEndpoint.elementId];
           const output = gatejs.gates[toEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
 
             input.addSum(output);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
             input.addCout(output);
           }
-          
+
           input.setConnected(true, pos);
           output.addInput(input, pos);
         }
@@ -538,18 +502,18 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("a0")) {
             fajs.fullAdder[fromEndpoint.elementId].setA0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("b0")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("b0")) {
             fajs.fullAdder[fromEndpoint.elementId].setB0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[fromEndpoint.elementId].setCin([input, pos]);
           }
 
           input.addOutput(fajs.fullAdder[fromEndpoint.elementId]);
         }
-      }
-      else if (end_type === "FullAdder" && fromEndpoint.elementId in gatejs.gates) {
+      } else if (
+        end_type === "FullAdder" &&
+        fromEndpoint.elementId in gatejs.gates
+      ) {
         // connection is started from the outputs of gate
         if (start_uuid === "output") {
           // connection will end at the input of fulldder flipflop
@@ -558,11 +522,9 @@ export const connectMux = function () {
           let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("a0")) {
             fajs.fullAdder[toEndpoint.elementId].setA0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("b0")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("b0")) {
             fajs.fullAdder[toEndpoint.elementId].setB0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("cin")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[toEndpoint.elementId].setCin([input, pos]);
           }
 
@@ -574,43 +536,40 @@ export const connectMux = function () {
 
           const input = fajs.fullAdder[toEndpoint.elementId];
           const output = gatejs.gates[fromEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
 
             input.addCout(output);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("sum")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
             input.addSum(output);
-
           }
           input.setConnected(true, pos);
           output.addInput(input, pos);
         }
-      }
-      else if (start_type === "Mux" && toEndpoint.elementId in fajs.fullAdder) {
+      } else if (
+        start_type === "Mux" &&
+        toEndpoint.elementId in fajs.fullAdder
+      ) {
         // connection is started from the outputs of mux
         if (start_uuid === "output") {
           // connection will end at the input of the fulladder
           const input = muxjs.mux[fromEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(fromEndpoint.overlays)[0].includes("output")) {
             pos = "output";
           }
           input.setConnected(true, pos);
-          if(Object.keys(toEndpoint.overlays)[0].includes("a0")) {
+          if (Object.keys(toEndpoint.overlays)[0].includes("a0")) {
             fajs.fullAdder[toEndpoint.elementId].setA0([input, pos]);
-          }
-          else if(Object.keys(toEndpoint.overlays)[0].includes("b0")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("b0")) {
             fajs.fullAdder[toEndpoint.elementId].setB0([input, pos]);
-          }
-          else if(Object.keys(toEndpoint.overlays)[0].includes("cin")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("cin")) {
             fajs.fullAdder[toEndpoint.elementId].setCin([input, pos]);
           }
 
           input.addOutput(fajs.fullAdder[toEndpoint.elementId]);
-
         }
         // connection is started from the inputs of mux
         else if (start_uuid === "input") {
@@ -621,66 +580,54 @@ export const connectMux = function () {
             pos = "Sum";
 
             input.addSum(muxjs.mux[fromEndpoint.elementId]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("cout")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
             input.addCout(muxjs.mux[fromEndpoint.elementId]);
-
           }
           input.setConnected(true, pos);
           if (Object.keys(fromEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[fromEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[fromEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[fromEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[fromEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[fromEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[fromEndpoint.elementId].setS1([input, pos]);
           }
         }
-      }
-      else if (end_type === "Mux" && fromEndpoint.elementId in fajs.fullAdder) {
+      } else if (
+        end_type === "Mux" &&
+        fromEndpoint.elementId in fajs.fullAdder
+      ) {
         // connection is started from the outputs of fullAdder
         if (start_uuid === "output") {
           // connection will end at the input of the mux
           const input = fajs.fullAdder[fromEndpoint.elementId];
           let pos = "";
-          if(Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
+          if (Object.keys(fromEndpoint.overlays)[0].includes("cout")) {
             pos = "Carry";
 
             input.addCout(muxjs.mux[toEndpoint.elementId]);
-          }
-          else if(Object.keys(fromEndpoint.overlays)[0].includes("sum")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("sum")) {
             pos = "Sum";
             input.addSum(muxjs.mux[toEndpoint.elementId]);
-
           }
           input.setConnected(true, pos);
           if (Object.keys(toEndpoint.overlays)[0].includes("i0")) {
             muxjs.mux[toEndpoint.elementId].setI0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i1")) {
             muxjs.mux[toEndpoint.elementId].setI1([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i2")) {
             muxjs.mux[toEndpoint.elementId].setI2([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("i3")) {
             muxjs.mux[toEndpoint.elementId].setI3([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s0")) {
             muxjs.mux[toEndpoint.elementId].setS0([input, pos]);
-          }
-          else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
+          } else if (Object.keys(toEndpoint.overlays)[0].includes("s1")) {
             muxjs.mux[toEndpoint.elementId].setS1([input, pos]);
           }
         }
@@ -689,29 +636,25 @@ export const connectMux = function () {
           // connection will end at the output of the mux
           const input = muxjs.mux[toEndpoint.elementId];
           const output = fajs.fullAdder[fromEndpoint.elementId];
-          let pos = ""
+          let pos = "";
           if (Object.keys(toEndpoint.overlays)[0].includes("output")) {
             pos = "output";
           }
           input.setConnected(true, pos);
-          if(Object.keys(fromEndpoint.overlays)[0].includes("a0")) {
+          if (Object.keys(fromEndpoint.overlays)[0].includes("a0")) {
             output.setA0([input, pos]);
-          }
-          else if(Object.keys(fromEndpoint.overlays)[0].includes("b0")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("b0")) {
             output.setB0([input, pos]);
-          }
-          else if(Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
+          } else if (Object.keys(fromEndpoint.overlays)[0].includes("cin")) {
             output.setCin([input, pos]);
           }
 
           input.addOutput(output);
-
         }
       }
     }
   });
-
-}
+};
 
 // Unbinds the event listeners
 export const unbindEvent = () => {
@@ -878,8 +821,7 @@ export function registerGate(id, gate) {
         ],
       })
     );
-  }
-  else if (gateType === "Mux") {
+  } else if (gateType === "Mux") {
     // input s0
     gate.addInputPoints(
       jsPlumbInstance.addEndpoint(element, {
@@ -996,15 +938,31 @@ export function registerGate(id, gate) {
 }
 
 export function initALU() {
-  const ids = ["Input-0", "Input-1", "Input-2","Input-3","Input-4", "Output-5", "Output-6"]; // [A,B,carry -input,Sum,carry-output]
-  const types = ["Input", "Input", "Input","Input","Input", "Output", "Output"];
-  const names = ["A", "B", "cin","S1","S0", "Output", "cout"];
+  const ids = [
+    "Input-0",
+    "Input-1",
+    "Input-2",
+    "Input-3",
+    "Input-4",
+    "Output-5",
+    "Output-6",
+  ]; // [A,B,carry -input,Sum,carry-output]
+  const types = [
+    "Input",
+    "Input",
+    "Input",
+    "Input",
+    "Input",
+    "Output",
+    "Output",
+  ];
+  const names = ["A", "B", "cin", "S1", "S0", "Output", "cout"];
   const positions = [
     { x: 40, y: 150 },
     { x: 40, y: 375 },
     { x: 350, y: 100 },
-    { x: 500, y: 100},
-    { x: 600, y: 100},
+    { x: 500, y: 100 },
+    { x: 600, y: 100 },
     { x: 820, y: 262.5 },
     { x: 820, y: 50 },
   ];
@@ -1028,14 +986,14 @@ export function refreshWorkingArea() {
   fajs.clearFAs();
 }
 
-refresh.addEventListener("click",function(event){
+refresh.addEventListener("click", function (event) {
   jsPlumbInstance.reset();
-  window.numComponents=0;
+  window.numComponents = 0;
   gatejs.clearGates();
   fajs.clearFAs();
   console.log(currentTab);
-  if (window.currentTab=="task1") initALU();
-})
+  if (window.currentTab == "task1") initALU();
+});
 const menu = document.querySelector(".menu");
 const menuOption = document.querySelector(".menu-option");
 let menuVisible = false;
@@ -1063,39 +1021,212 @@ window.addEventListener("click", () => {
   window.selectedComponent = null;
   window.componentType = null;
 });
-document.addEventListener('contextmenu', function(event) {
-  event.preventDefault(); // Prevent the default context menu from appearing
-  menu.style.display = "block";
-  menu.style.left = `${event.clientX}px`;
-  menu.style.top = `${event.clientY}px`;
-var elements = document.querySelectorAll(".jtk-connector.jtk-hover");
+document.addEventListener("contextmenu", function (event) {
+  // Only show custom context menu for specific elements
+  const target = event.target;
+  const isComponent =
+    target.closest(".drag-drop") ||
+    target.closest(".logic-gate") ||
+    target.closest(".high") ||
+    target.closest(".low") ||
+    target.closest(".output") ||
+    target.closest(".fulladder") ||
+    target.closest(".mux");
+  const isConnection = target.closest(".jtk-connector");
+  const isWorkingArea =
+    target.closest("#working-area") && !isComponent && !isConnection;
+
+  // Only prevent default context menu for our interactive elements
+  if (isComponent || isConnection || isWorkingArea) {
+    event.preventDefault(); // Prevent the default context menu from appearing
+    menu.style.display = "block";
+    menu.style.left = `${event.clientX}px`;
+    menu.style.top = `${event.clientY}px`;
+
+    // Store the target element and check if it's a connection
+    window.contextMenuTarget = event.target;
+    window.isConnectionContext =
+      event.target.closest(".jtk-connector") !== null;
+
+    toggleMenu("show");
+  }
+  // If it's not one of our elements, let the browser handle the context menu normally
+});
+
+// Menu option click handler (moved outside to avoid multiple listeners)
 menuOption.addEventListener("click", (e) => {
-  console.log("element deleted", elements);
   if (e.target.innerHTML === "Delete") {
     if (window.componentType === "gate") {
       console.log("op1");
       deleteElement(window.selectedComponent);
-    }
-    else if (window.componentType === "fullAdder")
-      {
-        deleteFA(window.selectedComponent);
-      } 
-      else if (window.componentType === "mux") {
-        deleteMux(window.selectedComponent);
-      }else {
-      console.log("op2");
-      elements.forEach(function(element) {
-        element.parentNode.removeChild(element);
-      });
+    } else if (window.componentType === "fullAdder") {
+      deleteFA(window.selectedComponent);
+    } else if (window.componentType === "mux") {
+      deleteMux(window.selectedComponent);
+    } else {
+      console.log("op2 - deleting wire connections");
+      console.log(
+        "Available JSPlumb methods:",
+        Object.getOwnPropertyNames(jsPlumbInstance)
+      );
+
+      let connectionDeleted = false;
+
+      // Try to delete connection that was right-clicked
+      if (window.isConnectionContext && window.contextMenuTarget) {
+        //console.log("Context menu target:", window.contextMenuTarget);
+        const connectorElement =
+          window.contextMenuTarget.closest(".jtk-connector");
+        //console.log("Connector element found:", connectorElement);
+        if (connectorElement) {
+          console.log(
+            "Connector element properties:",
+            Object.keys(connectorElement)
+          );
+          //console.log("JSPlumb data:", connectorElement._jsPlumb);
+
+          // Try to find the connection by its DOM element
+          // JSPlumb stores connection info in the DOM element
+          try {
+            // Method 1: Try JSPlumb's select and check entries
+            if (jsPlumbInstance.select) {
+              // Get all connections and find the one with this canvas
+              const allConnections = jsPlumbInstance.select();
+              //console.log("All connections:", allConnections);
+
+              // Use the entries array to find matching connection
+              if (allConnections.entries && allConnections.entries.length > 0) {
+                for (let i = 0; i < allConnections.entries.length; i++) {
+                  const connection = allConnections.entries[i];
+                  if (
+                    connection.connector &&
+                    connection.connector.canvas === connectorElement
+                  ) {
+                    console.log("Found matching connection, deleting...");
+                    jsPlumbInstance.deleteConnection(connection);
+                    connectionDeleted = true;
+                    console.log(
+                      "Deleting specific connection via JSPlumb deleteConnection"
+                    );
+                    break;
+                  }
+                }
+              }
+            }
+
+            // Method 2: Use the connections property directly
+            if (!connectionDeleted && jsPlumbInstance.connections) {
+              for (let i = 0; i < jsPlumbInstance.connections.length; i++) {
+                const connection = jsPlumbInstance.connections[i];
+                if (
+                  connection.connector &&
+                  connection.connector.canvas === connectorElement
+                ) {
+                  console.log(
+                    "Found matching connection via connections array, deleting..."
+                  );
+                  jsPlumbInstance.deleteConnection(connection);
+                  connectionDeleted = true;
+                  console.log(
+                    "Deleting specific connection via connections array"
+                  );
+                  break;
+                }
+              }
+            }
+
+            // Method 3: Remove the DOM element directly (fallback)
+            if (!connectionDeleted && connectorElement.parentNode) {
+              connectorElement.parentNode.removeChild(connectorElement);
+              connectionDeleted = true;
+              console.log(
+                "Deleting specific connection via DOM removal (fallback)"
+              );
+            }
+          } catch (error) {
+            console.log("Error deleting specific connection:", error);
+          }
+        }
+      }
+
+      // Fallback: delete hovered connections
+      if (!connectionDeleted) {
+        const elementsToDelete = document.querySelectorAll(
+          ".jtk-connector.jtk-hover"
+        );
+        console.log("Elements found for deletion:", elementsToDelete);
+
+        if (elementsToDelete.length > 0) {
+          elementsToDelete.forEach(function (connectorElement) {
+            try {
+              // Method 1: Try JSPlumb's select and check entries
+              if (jsPlumbInstance.select && !connectionDeleted) {
+                const allConnections = jsPlumbInstance.select();
+                if (
+                  allConnections.entries &&
+                  allConnections.entries.length > 0
+                ) {
+                  for (let i = 0; i < allConnections.entries.length; i++) {
+                    const connection = allConnections.entries[i];
+                    if (
+                      connection.connector &&
+                      connection.connector.canvas === connectorElement
+                    ) {
+                      jsPlumbInstance.deleteConnection(connection);
+                      connectionDeleted = true;
+                      console.log(
+                        "Deleting hovered connection via JSPlumb deleteConnection"
+                      );
+                      break;
+                    }
+                  }
+                }
+              }
+
+              // Method 2: Use the connections property directly
+              if (!connectionDeleted && jsPlumbInstance.connections) {
+                for (let i = 0; i < jsPlumbInstance.connections.length; i++) {
+                  const connection = jsPlumbInstance.connections[i];
+                  if (
+                    connection.connector &&
+                    connection.connector.canvas === connectorElement
+                  ) {
+                    jsPlumbInstance.deleteConnection(connection);
+                    connectionDeleted = true;
+                    console.log(
+                      "Deleting hovered connection via connections array"
+                    );
+                    break;
+                  }
+                }
+              }
+
+              // Method 3: Fallback to DOM removal
+              if (!connectionDeleted && connectorElement.parentNode) {
+                connectorElement.parentNode.removeChild(connectorElement);
+                console.log(
+                  "Deleting hovered connection via DOM removal (fallback)"
+                );
+                connectionDeleted = true;
+              }
+            } catch (error) {
+              console.log("Error deleting hovered connection:", error);
+            }
+          });
+        }
+      }
+
+      if (!connectionDeleted) {
+        console.log("No connections found to delete");
+      }
     }
   }
+  // Reset context variables
+  window.contextMenuTarget = null;
+  window.isConnectionContext = false;
   // window.selectedComponent = null;
   // window.componentType = null;
   toggleMenu("hide"); // Hide menu after selection
-});
-
-
-  toggleMenu("show");
 });
 
 // Initialise Task 1 experiment when the page loads
