@@ -1,13 +1,9 @@
 import { registerGate, jsPlumbInstance } from "./main.js";
 import { setPosition } from "./main.js";
 import { gates } from "./gate.js";
-import {
-  computeAnd,
-  computeOr,
-  computeXor
-} from "./validator.js";
-import {mux} from "./mux.js";
-"use strict";
+import { computeAnd, computeOr, computeXor } from "./validator.js";
+import { mux } from "./mux.js";
+("use strict");
 // Dictionary of all full adders in the circuit with their IDs as keys
 export let fullAdder = {};
 
@@ -17,7 +13,6 @@ export function clearFAs() {
   }
   fullAdder = {};
 }
-
 
 export class FullAdder {
   constructor() {
@@ -41,6 +36,11 @@ export class FullAdder {
     const parent = document.getElementById(workingArea);
     parent.insertAdjacentHTML("beforeend", this.component);
     const el = document.getElementById(this.id);
+
+    if (!el) {
+      console.error(`FullAdder element with id ${this.id} not found in DOM`);
+      return;
+    }
 
     el.style.left = x + "px";
     el.style.top = y + "px";
@@ -78,7 +78,6 @@ export class FullAdder {
     this.cin = cin;
   }
 
-
   // adds output gates to which cout and sum are connected
   addCout(gate) {
     this.outCout.push(gate);
@@ -86,7 +85,7 @@ export class FullAdder {
 
   addSum(gate) {
     this.outSum.push(gate);
-  } 
+  }
   setSum(Sum) {
     this.sum = Sum;
   }
@@ -108,19 +107,19 @@ export class FullAdder {
   // Removes the selected gates from outCout and outSum
   removeoutCout(gate) {
     for (let i = this.outCout.length - 1; i >= 0; i--) {
-        if (this.outCout[i] === gate) {
-          this.outCout.splice(i, 1);
-        }
-        }
-}
+      if (this.outCout[i] === gate) {
+        this.outCout.splice(i, 1);
+      }
+    }
+  }
 
   removeoutSum(gate) {
     // Find and remove all occurrences of gate
-  for (let i = this.outSum.length - 1; i >= 0; i--) {
-    if (this.outSum[i] === gate) {
-      this.outSum.splice(i, 1);
+    for (let i = this.outSum.length - 1; i >= 0; i--) {
+      if (this.outSum[i] === gate) {
+        this.outSum.splice(i, 1);
+      }
     }
-  }
   }
 
   // Generates the output of the full adder
@@ -154,9 +153,13 @@ export class FullAdder {
 }
 
 // Add a full adder to the circuit board
-export function addFA() {
+export function addFA(event) {
   let fA = new FullAdder();
-  fA.registerComponent("working-area");
+
+  // Use requestAnimationFrame to ensure DOM is updated before registering
+  requestAnimationFrame(() => {
+    fA.registerComponent("working-area");
+  });
 }
 
 window.addFA = addFA;
@@ -173,8 +176,6 @@ export function getOutputFA(gate, pos) {
     return gate.output;
   }
 }
-
-
 
 // Delete Full Adder
 export function deleteFA(id) {
@@ -195,55 +196,54 @@ export function deleteFA(id) {
     if (fullAdder[key].cin[0] === fa) {
       fullAdder[key].cin = null;
     }
-    if(fullAdder[key].outCout.includes(fa)){
+    if (fullAdder[key].outCout.includes(fa)) {
       fullAdder[key].removeoutCout(fa);
     }
-    if(fullAdder[key].outSum.includes(fa)){
+    if (fullAdder[key].outSum.includes(fa)) {
       fullAdder[key].removeoutSum(fa);
- }
+    }
   }
-  for(let key in mux){
-    if(mux[key].i0[0] === fa) {
-        mux[key].i0 = null;
+  for (let key in mux) {
+    if (mux[key].i0[0] === fa) {
+      mux[key].i0 = null;
     }
-    if(mux[key].i1[0] === fa) {
-        mux[key].i1 = null;
+    if (mux[key].i1[0] === fa) {
+      mux[key].i1 = null;
     }
-    if(mux[key].i2[0] === fa) {
-        mux[key].i2 = null;
+    if (mux[key].i2[0] === fa) {
+      mux[key].i2 = null;
     }
-    if(mux[key].i3[0] === fa) {
-        mux[key].i3 = null;
+    if (mux[key].i3[0] === fa) {
+      mux[key].i3 = null;
     }
-    if(mux[key].s0[0] === fa) {
-        mux[key].s0 = null;
+    if (mux[key].s0[0] === fa) {
+      mux[key].s0 = null;
     }
-    if(mux[key].s1[0] === fa) {
-        mux[key].s1 = null;
+    if (mux[key].s1[0] === fa) {
+      mux[key].s1 = null;
     }
 
-    if(mux[key].outputs.includes(fa)){
+    if (mux[key].outputs.includes(fa)) {
       mux[key].removeOutput(fa);
     }
   }
   for (let elem in gates) {
     let found = 0;
     for (let index in gates[elem].inputs) {
-        if (gates[elem].inputs[index][0].id === fa.id) {
-            found = 1;
-            break;
-        }
+      if (gates[elem].inputs[index][0].id === fa.id) {
+        found = 1;
+        break;
+      }
     }
     if (found === 1) {
-        gates[elem].removeInput(fa);
+      gates[elem].removeInput(fa);
     }
 
-
-    if(gates[elem].outputs.includes(fa)) {
+    if (gates[elem].outputs.includes(fa)) {
       gates[elem].removeOutput(fa);
-      if(gates[elem].isInput && gates[elem].outputs.length ===0)
-      gates[elem].setConnected(false);
+      if (gates[elem].isInput && gates[elem].outputs.length === 0)
+        gates[elem].setConnected(false);
     }
   }
-  delete fullAdder[id]; 
+  delete fullAdder[id];
 }
