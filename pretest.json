@@ -1,0 +1,90 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. An Arithmetic Logic Unit (ALU) is primarily based on which type of digital logic:",
+      "answers": {
+        "a": "Arithmetic circuits only",
+        "b": "Combinational logic",
+        "c": "Sequential logic",
+        "d": "Memory circuits"
+      },
+      "correctAnswer": "b",
+      "explanations": {
+        "b": "Correct. The ALU is primarily based on combinational logic, which means its outputs depend only on the current input values and not on any previous inputs or internal state. Combinational logic circuits use logic gates interconnected to perform complex operations.",
+        "a": "Incorrect. ALU performs both arithmetic and logical operations, not just arithmetic.",
+        "c": "Incorrect. Sequential logic depends on previous states and clock signals, which is not the primary basis of ALU operation.",
+        "d": "Incorrect. Memory circuits store data, while ALU processes data using combinational logic."
+      },
+      "difficulty": "beginner"
+    },
+    {
+      "question": "2. The primary function of an ALU is to:",
+      "answers": {
+        "a": "Perform arithmetic operations only",
+        "b": "Perform logical operations only",
+        "c": "Perform both arithmetic and logical operations",
+        "d": "Store data in registers"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "c": "Correct. The ALU performs both arithmetic operations (such as addition, subtraction) and logical operations (such as AND, OR, XOR) on binary data.",
+        "a": "Incorrect. ALU performs logical operations in addition to arithmetic operations.",
+        "b": "Incorrect. ALU performs arithmetic operations in addition to logical operations.",
+        "d": "Incorrect. Data storage is handled by registers and memory units, not the ALU."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "3. In the context of bitwise operations used in ALU design, identify the operation that is NOT a bitwise operator:",
+      "answers": {
+        "a": "| (OR)",
+        "b": ">> (Right Shift)",
+        "c": ". (Dot/Period - used for decimal point or object access)",
+        "d": "^ (XOR)"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "c": "Correct. The dot (.) is not a bitwise operator. It is typically used as a decimal point in numbers or for object/structure member access in programming languages.",
+        "a": "Incorrect. | represents the bitwise OR operation, commonly used in ALU logical functions.",
+        "b": "Incorrect. >> represents the right shift operation, used for bit manipulation in ALUs.",
+        "d": "Incorrect. ^ represents the bitwise XOR (exclusive OR) operation, fundamental to many ALU functions."
+      },
+      "difficulty": "advanced"
+    },
+    {
+      "question": "4. In the design of a programmable ALU, which component is essential for selecting between different arithmetic and logical operations:",
+      "answers": {
+        "a": "Full Adder",
+        "b": "Logic Gates (AND, OR, XOR)",
+        "c": "Multiplexer",
+        "d": "Decoder"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "c": "Correct. A multiplexer is essential in programmable ALU design as it selects which operation result to output based on the function select control signals (S1, S0).",
+        "a": "Incorrect. While full adders perform arithmetic operations, they don't select between different operations.",
+        "b": "Incorrect. Logic gates perform the operations but don't select between them.",
+        "d": "Incorrect. Decoders convert codes but don't select operation results in this ALU design."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "5. In a 1-bit ALU with function select lines S1S0, what operation is performed when S1S0 = 11:",
+      "answers": {
+        "a": "Addition (A + B)",
+        "b": "AND operation (A · B)",
+        "c": "OR operation (A + B)",
+        "d": "XOR operation (A ⊕ B)"
+      },
+      "correctAnswer": "d",
+      "explanations": {
+        "d": "Correct. According to the ALU function table, when S1S0 = 11, the ALU performs XOR operation (A ⊕ B), which outputs 1 when inputs are different.",
+        "a": "Incorrect. Addition is performed when S1S0 = 00.",
+        "b": "Incorrect. AND operation is performed when S1S0 = 01.",
+        "c": "Incorrect. OR operation is performed when S1S0 = 10."
+      },
+      "difficulty": "advanced"
+    }
+  ]
+}

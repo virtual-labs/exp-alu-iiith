@@ -1,0 +1,90 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. Based on the ALU function table (S₁S₀: 00=Addition, 01=AND, 10=OR, 11=XOR), what operation will be performed when S₁ is set (1) and S₀ is unset (0):",
+      "answers": {
+        "a": "Addition (SUM)",
+        "b": "AND operation",
+        "c": "OR operation",
+        "d": "XOR operation"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "c": "Correct. When S₁=1 and S₀=0 (binary 10), the ALU performs OR operation according to the function table.",
+        "a": "Incorrect. Addition is performed when S₁=0 and S₀=0 (binary 00).",
+        "b": "Incorrect. AND operation is performed when S₁=0 and S₀=1 (binary 01).",
+        "d": "Incorrect. XOR operation is performed when S₁=1 and S₀=1 (binary 11)."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "2. What operation will be performed when both S₁ and S₀ are set to 1:",
+      "answers": {
+        "a": "Addition (SUM)",
+        "b": "AND operation",
+        "c": "OR operation",
+        "d": "XOR operation"
+      },
+      "correctAnswer": "d",
+      "explanations": {
+        "d": "Correct. When S₁=1 and S₀=1 (binary 11), the ALU performs XOR operation according to the function table.",
+        "a": "Incorrect. Addition is performed when S₁=0 and S₀=0 (binary 00).",
+        "b": "Incorrect. AND operation is performed when S₁=0 and S₀=1 (binary 01).",
+        "c": "Incorrect. OR operation is performed when S₁=1 and S₀=0 (binary 10)."
+      },
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "3. For the ALU inputs A=1, B=0, with function select S₁S₀=01, what will be the output result:",
+      "answers": {
+        "a": "0",
+        "b": "1",
+        "c": "Undefined",
+        "d": "High impedance"
+      },
+      "correctAnswer": "a",
+      "explanations": {
+        "a": "Correct. When S₁S₀=01, AND operation is selected. A AND B = 1 AND 0 = 0.",
+        "b": "Incorrect. 1 AND 0 equals 0, not 1.",
+        "c": "Incorrect. The AND operation on these inputs produces a well-defined result.",
+        "d": "Incorrect. Digital logic gates produce definite high or low outputs, not high impedance."
+      },
+      "difficulty": "advanced"
+    },
+    {
+      "question": "4. In a 1-bit ALU performing addition (S₁S₀=00) with inputs A=1, B=1, and Cin=1, what are the values of Sum output and Carry output respectively:",
+      "answers": {
+        "a": "Sum=1, Carry=1",
+        "b": "Sum=0, Carry=0",
+        "c": "Sum=1, Carry=0",
+        "d": "Sum=0, Carry=1"
+      },
+      "correctAnswer": "a",
+      "explanations": {
+        "a": "Correct. Sum = A⊕B⊕Cin = 1⊕1⊕1 = 1. Carry = AB + BCin + CinA = 1·1 + 1·1 + 1·1 = 1.",
+        "b": "Incorrect. With all inputs being 1, both sum and carry outputs will be 1.",
+        "c": "Incorrect. When all three inputs are 1, carry output must be 1 due to multiple input combinations being true.",
+        "d": "Incorrect. Sum calculation: 1⊕1⊕1 = 1, not 0."
+      },
+      "difficulty": "advanced"
+    },
+    {
+      "question": "5. Which component in the programmable ALU design is primarily responsible for selecting the final output based on the function select lines S₁S₀:",
+      "answers": {
+        "a": "Full Adder",
+        "b": "Logic Gates (AND, OR, XOR)",
+        "c": "4-to-1 Multiplexer",
+        "d": "Decoder circuit"
+      },
+      "correctAnswer": "c",
+      "explanations": {
+        "c": "Correct. The 4-to-1 multiplexer uses S₁S₀ as select lines to choose which operation result (addition, AND, OR, XOR) appears at the output.",
+        "a": "Incorrect. The full adder performs arithmetic operations but doesn't select the final output.",
+        "b": "Incorrect. Logic gates perform individual operations but don't select between them.",
+        "d": "Incorrect. This ALU design uses a multiplexer, not a decoder, for output selection."
+      },
+      "difficulty": "intermediate"
+    }
+  ]
+}
