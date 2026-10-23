@@ -96,9 +96,11 @@ export function validateAlu(inputA, inputB, inputCin, inputS1, inputS0, outputOu
     }
 
     for (let i = 0; i < 32; i++) {
-        //convert i to binary
-        let binary = i.toString(2).padStart(5, "0");
-        binary = binary.split("").reverse().join("");
+        // rows are grouped by the select lines S1S0 and, inside a group, ABC counts upwards (A is the most significant bit)
+        const select = i >> 3;
+        const abc = i & 7;
+        // binary holds the bits in the order A, B, Cin, S0, S1
+        const binary = [(abc >> 2) & 1, (abc >> 1) & 1, abc & 1, select & 1, (select >> 1) & 1].join("");
         A.setOutput(binary[0] === "1");
         B.setOutput(binary[1] === "1");
         cin.setOutput(binary[2] === "1");
@@ -109,17 +111,19 @@ export function validateAlu(inputA, inputB, inputCin, inputS1, inputS0, outputOu
         testSimulationMux(fa_list, gates_list, mux_list);
         const out = gates_list[outputOut].output ? 1 : 0;
         const cout = gates_list[outputCout].output ? 1 : 0;
-        let outputString = "";
-        outputString += out;
-        outputString += cout;
-        let expectedString = computeAlu(binary);
-        if (expectedString !== outputString) {
+        // Cout is the carry of the full adder, so it is only meaningful (and checked) when the addition is selected (S1S0 = 00)
+        const addMode = binary[4] === "0" && binary[3] === "0";
+        const expectedString = computeAlu(binary);
+        const expectedOut = expectedString[0];
+        const expectedCout = expectedString[1];
+        const outCorrect = String(out) === expectedOut;
+        const coutCorrect = !addMode || String(cout) === expectedCout;
+        if (!outCorrect || !coutCorrect) {
             circuitIsCorrect = false;
-            dataTable += `<tr class="bold-table"><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="failure-table"> ${cout} </td><td class="failure-table"> ${out} </td></tr>`;
         }
-        else {
-            dataTable += `<tr class="bold-table"><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td> ${expectedString[1]} </td><td> ${expectedString[0]} </td><td class="success-table"> ${cout} </td><td class="success-table"> ${out} </td></tr>`;
-        }
+        const outClass = outCorrect ? "success-table" : "failure-table";
+        const coutClass = !addMode ? "" : coutCorrect ? "success-table" : "failure-table";
+        dataTable += `<tr class="bold-table"><td>${binary[4]}${binary[3]}</td><td>${binary[0]}${binary[1]}${binary[2]}</td><td>${addMode ? expectedCout : "x"}</td><td>${expectedOut}</td><td class="${coutClass}">${cout}</td><td class="${outClass}">${out}</td></tr>`;
     }
 
     const table_elem = document.getElementById("table-body");

@@ -1,6 +1,6 @@
 import { registerGate, jsPlumbInstance } from "./main.js";
 import { setPosition } from "./main.js";
-import { gates } from "./gate.js";
+import { gates, showTimedMessage, clearMessage } from "./gate.js";
 import { fullAdder } from "./fa.js";
 
 ("use strict");
@@ -325,7 +325,7 @@ export function checkConnectionsMux() {
 
 // Simulates the circuit
 export function simulateMux() {
-  clearResult();
+  clearMessage();
   if (!checkConnectionsMux()) {
     return;
   }
@@ -368,11 +368,7 @@ export function simulateMux() {
   }
 
   // Displays message confirming Simulation completion
-  let message = "Simulation has finished";
-  const result = document.getElementById("result");
-  result.innerHTML += message;
-  result.className = "success-message";
-  setTimeout(clearResult, 2000);
+  showTimedMessage("Simulation has finished");
 }
 
 // Simulates the circuit for given fulladders and gates; Used for testing the circuit for all values
@@ -421,22 +417,22 @@ export function deleteMux(id) {
       continue;
     }
     if (mux[key].i0[0] === muxComponent) {
-      mux[key].i0 = null;
+      mux[key].i0 = [];
     }
     if (mux[key].i1[0] === muxComponent) {
-      mux[key].i1 = null;
+      mux[key].i1 = [];
     }
     if (mux[key].i2[0] === muxComponent) {
-      mux[key].i2 = null;
+      mux[key].i2 = [];
     }
     if (mux[key].i3[0] === muxComponent) {
-      mux[key].i3 = null;
+      mux[key].i3 = [];
     }
     if (mux[key].s0[0] === muxComponent) {
-      mux[key].s0 = null;
+      mux[key].s0 = [];
     }
     if (mux[key].s1[0] === muxComponent) {
-      mux[key].s1 = null;
+      mux[key].s1 = [];
     }
 
     if (mux[key].outputs.includes(muxComponent)) {
@@ -446,13 +442,13 @@ export function deleteMux(id) {
 
   for (let key in fullAdder) {
     if (fullAdder[key].a0[0] === muxComponent) {
-      fullAdder[key].a0 = null;
+      fullAdder[key].a0 = [];
     }
     if (fullAdder[key].b0[0] === muxComponent) {
-      fullAdder[key].b0 = null;
+      fullAdder[key].b0 = [];
     }
     if (fullAdder[key].cin[0] === muxComponent) {
-      fullAdder[key].cin = null;
+      fullAdder[key].cin = [];
     }
 
     if (fullAdder[key].outCout.includes(muxComponent)) {

@@ -85,7 +85,7 @@ export class Gate {
 
     switch (this.type) {
       case "Input":
-        component = `<div class="high" id= ${this.id} ><a ondblclick="setInput(event)">1</a><p> ${this.name}  </p></div>`;
+        component = `<div class="high" id= ${this.id} title="Click to toggle between 0 and 1"><a onclick="setInput(event)">1</a><p> ${this.name}  </p></div>`;
         this.output = true;
         this.isInput = true;
         break;
@@ -244,22 +244,49 @@ function addGate(event) {
 }
 
 window.addGate = addGate;
-// Set the Input values of the input bits on double click
+// Position of the last mouse/touch press, used to tell a click apart from the end of a drag
+let pressPosition = { x: 0, y: 0 };
+document.addEventListener(
+  "pointerdown",
+  function (event) {
+    pressPosition = { x: event.clientX, y: event.clientY };
+  },
+  true
+);
+
+// Clears the output bits so that values from an earlier simulation are not shown for new inputs
+function clearOutputBits() {
+  for (let gateId in gates) {
+    if (gates[gateId].isOutput) {
+      const element = document.getElementById(gateId);
+      element.className = "output";
+      element.childNodes[0].innerHTML = "";
+    }
+  }
+}
+
+// Set the Input values of the input bits on click
 function setInput(event) {
+  // ignore the click that ends a drag of the input bit
+  if (
+    Math.hypot(event.clientX - pressPosition.x, event.clientY - pressPosition.y) > 5
+  ) {
+    return;
+  }
   let parentElement = event.target.parentElement;
   let element = event.target;
-  let type = parentElement.className.split(" ")[0];
   let gate = gates[parentElement.id];
-  if (type === "high") {
+  if (parentElement.classList.contains("high")) {
     // change class high to low
     parentElement.classList.replace("high", "low");
     element.innerHTML = "0";
     gate.setOutput(false);
-  } else if (type === "low") {
+  } else if (parentElement.classList.contains("low")) {
     parentElement.classList.replace("low", "high");
     element.innerHTML = "1";
     gate.setOutput(true);
   }
+  clearOutputBits();
 }
 
 window.setInput = setInput;
@@ -313,22 +340,22 @@ export function deleteElement(gateid) {
   }
   for (let key in mux) {
     if (mux[key].i0[0] === gate) {
-      mux[key].i0 = null;
+      mux[key].i0 = [];
     }
     if (mux[key].i1[0] === gate) {
-      mux[key].i1 = null;
+      mux[key].i1 = [];
     }
     if (mux[key].i2[0] === gate) {
-      mux[key].i2 = null;
+      mux[key].i2 = [];
     }
     if (mux[key].i3[0] === gate) {
-      mux[key].i3 = null;
+      mux[key].i3 = [];
     }
     if (mux[key].s0[0] === gate) {
-      mux[key].s0 = null;
+      mux[key].s0 = [];
     }
     if (mux[key].s1[0] === gate) {
-      mux[key].s1 = null;
+      mux[key].s1 = [];
     }
 
     if (mux[key].outputs.includes(gate)) {
@@ -337,13 +364,13 @@ export function deleteElement(gateid) {
   }
   for (let key in fullAdder) {
     if (fullAdder[key].a0[0] === gate) {
-      fullAdder[key].a0 = null;
+      fullAdder[key].a0 = [];
     }
     if (fullAdder[key].b0[0] === gate) {
-      fullAdder[key].b0 = null;
+      fullAdder[key].b0 = [];
     }
     if (fullAdder[key].cin[0] === gate) {
-      fullAdder[key].cin = null;
+      fullAdder[key].cin = [];
     }
     if (fullAdder[key].outCout.includes(gate)) {
       fullAdder[key].removeoutCout(gate);
@@ -355,8 +382,28 @@ export function deleteElement(gateid) {
   delete gates[gateid];
 }
 
+let messageTimer = null;
+
+// Shows a message in the observations for 2 seconds without touching the truth table
+export function showTimedMessage(message) {
+  clearTimeout(messageTimer);
+  const result = document.getElementById("result");
+  result.innerHTML = message;
+  result.className = "success-message";
+  messageTimer = setTimeout(function () {
+    result.innerHTML = "";
+  }, 2000);
+}
+
+// Clears the message in the observations but keeps the truth table
+export function clearMessage() {
+  clearTimeout(messageTimer);
+  document.getElementById("result").innerHTML = "";
+}
+
 export function clearResult() {
   // clear result
+  clearMessage();
   const result = document.getElementById("result");
   result.innerHTML = "";
 
@@ -373,7 +420,7 @@ export function printErrors(message, objectId) {
   const result = document.getElementById("result");
   result.innerHTML += message;
   result.className = "failure-message";
-  if (objectId !== null) {
+  if (objectId) {
     objectId.classList.add("highlight");
     setTimeout(function () {
       objectId.classList.remove("highlight");
@@ -426,7 +473,7 @@ export function getResult(gate) {
 
 // Simulate the circuit
 export function simulate() {
-  clearResult();
+  clearMessage();
   if (!checkConnections()) {
     return;
   }
@@ -456,11 +503,7 @@ export function simulate() {
   }
 
   // Displays message confirming Simulation completion
-  let message = "Simulation has finished";
-  const result = document.getElementById("result");
-  result.innerHTML += message;
-  result.className = "success-message";
-  setTimeout(clearResult, 2000);
+  showTimedMessage("Simulation has finished");
 }
 
 window.simulate = simulate;
