@@ -54,7 +54,7 @@ window.changeTabs = changeTabs;
 
 function updateToolbar() {
   let elem = 
-      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button not" onclick="addGate(event)">NOT</div><div class="component-button nand" onclick="addGate(event)">NAND</div><div class="component-button nor" onclick="addGate(event)">NOR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button xnor" onclick="addGate(event)">XNOR</div><div class="component-button fulladder" onclick="addFA(event)"></div><div class="component-button mux" onclick="addMux(event)"></div>';
+      '<div class="component-button and" onclick="addGate(event)">AND</div><div class="component-button or" onclick="addGate(event)">OR</div><div class="component-button xor" onclick="addGate(event)">XOR</div><div class="component-button fulladder" onclick="addFA(event)"></div><div class="component-button mux" onclick="addMux(event)"></div>';
   document.getElementById("toolbar").innerHTML = elem;
 }
 

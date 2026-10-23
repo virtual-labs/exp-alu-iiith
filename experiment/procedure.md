@@ -16,59 +16,61 @@ _Figure 1: 1-bit Programmable ALU circuit diagram showing multiplexer-based func
 
 #### Circuit Connections
 
-1. **Full Adder Setup**: Drag the full adder and connect inputs A₀ and B₀ to its input pins A and B respectively, and connect C₀ to its Cin input pin. This will handle the arithmetic addition operation when selected.
+The board has the input bits A, B, cin, S1 and S0, and the output bits Output (the result F) and cout. An input bit can be connected to several components: drag a new wire from an output point that is already connected. A wire can be dragged from an output point to an input point or the other way round.
 
-2. **Logic Gates Setup**: Drag AND, OR, and XOR gates and connect inputs A₀ and B₀ to their input pins. These gates will perform the logical operations when selected by the multiplexer.
+1. **Full Adder Setup**: Drag the full adder and connect the input bits A and B to its pins A0 and B0 respectively, and connect the input bit cin to its Cin pin. This will handle the arithmetic addition operation when selected.
 
-3. **Carry Output Connection**: Connect the Cout (carry output) of the full adder to the Cout output bit. This provides the carry signal for arithmetic operations.
+2. **Logic Gates Setup**: Drag AND, OR, and XOR gates and connect the input bits A and B to their input pins. These gates will perform the logical operations when selected by the multiplexer.
 
-4. **Multiplexer Configuration**: Drag a 4-to-1 multiplexer and connect its select lines S₁ and S₀ to the S₁ and S₀ control bits respectively.
+3. **Carry Output Connection**: Connect the Cout pin (carry output) of the full adder to the cout output bit. This provides the carry signal for arithmetic operations.
+
+4. **Multiplexer Configuration**: Drag a 4-to-1 multiplexer and connect its select pins s1 and s0 to the input bits S1 and S0 respectively.
 
 5. **Multiplexer Input Connections** (refer to the demo for visual guidance with labeled inputs):
 
-   - Connect I₀ of multiplexer to the "Sum" output of the full adder (for addition operation - selected when S₁S₀ = 00)
-   - Connect I₁ of multiplexer to the output of the AND gate (for AND operation - selected when S₁S₀ = 01)
-   - Connect I₂ of multiplexer to the output of the OR gate (for OR operation - selected when S₁S₀ = 10)
-   - Connect I₃ of multiplexer to the output of the XOR gate (for XOR operation - selected when S₁S₀ = 11)
+   - Connect i0 of multiplexer to the "Sum" output of the full adder (for addition operation - selected when S₁S₀ = 00)
+   - Connect i1 of multiplexer to the output of the AND gate (for AND operation - selected when S₁S₀ = 01)
+   - Connect i2 of multiplexer to the output of the OR gate (for OR operation - selected when S₁S₀ = 10)
+   - Connect i3 of multiplexer to the output of the XOR gate (for XOR operation - selected when S₁S₀ = 11)
 
-6. **Output Connection**: Connect the output of the multiplexer to the main output bit.
+6. **Output Connection**: Connect the output of the multiplexer to the Output bit.
 
-7. **Testing**: Set the values of A₀, B₀, C₀, S₁, and S₀ according to your test requirements and click "Simulate".
+7. **Testing**: Set the values of A, B, cin, S1, and S0 by clicking on the input bits (each click toggles the bit between 1 and 0) and click "Simulate".
 
 **Note**: The demo visualization includes enhanced MUX input labels (I₀(00), I₁(01), I₂(10), I₃(11)) with colored backgrounds to help you understand which operation is selected by each S₁S₀ combination.
 
 #### ALU Function Table
 
-| S₁  | S₀  | Operation | Description                        |
-| --- | --- | --------- | ---------------------------------- |
-| 0   | 0   | Addition  | Output = A₀ + B₀ + C₀ (with carry) |
-| 0   | 1   | AND       | Output = A₀ · B₀                   |
-| 1   | 0   | OR        | Output = A₀ + B₀                   |
-| 1   | 1   | XOR       | Output = A₀ ⊕ B₀                   |
+| S₁  | S₀  | Operation | Description                                                  |
+| --- | --- | --------- | ------------------------------------------------------------ |
+| 0   | 0   | Addition  | Output = sum bit of A + B + Cin, cout = carry of A + B + Cin |
+| 0   | 1   | AND       | Output = A · B                                               |
+| 1   | 0   | OR        | Output = A + B                                               |
+| 1   | 1   | XOR       | Output = A ⊕ B                                               |
 
 #### Testing Procedures
 
 **Addition Operation (S₁S₀ = 00):**
 
 1. Set S₁ = 0, S₀ = 0 to select addition mode
-2. Test various combinations of A₀, B₀, and C₀ inputs
-3. Observe both Sum output and Carry output (Cout)
+2. Test various combinations of A, B, and cin inputs
+3. Observe both the Output (Sum) and the carry output (cout)
 4. Verify results match full adder truth table
 
 **Logic Operations (S₁S₀ = 01, 10, 11):**
 
 1. Set appropriate S₁S₀ combinations for AND, OR, or XOR operations
-2. Test with different A₀ and B₀ input combinations
+2. Test with different A and B input combinations
 3. Observe output matches the selected logical operation
-4. Note that C₀ input is not used for logic operations
+4. Note that the cin input is not used for logic operations
 
 #### Observations
 
 - **Function Selection**: The multiplexer selects which operation result appears at the output based on S₁S₀ control signals, as described in the theory section. The demo visualization shows labeled MUX inputs (I₀(00), I₁(01), I₂(10), I₃(11)) to clarify this selection process.
 
-- **Arithmetic Mode**: When S₁S₀ = 00, the ALU performs addition of A₀, B₀, and C₀, producing both Sum and Carry outputs for potential cascading to higher-order bits.
+- **Arithmetic Mode**: When S₁S₀ = 00, the ALU performs addition of A, B, and cin, producing both Sum and Carry outputs for potential cascading to higher-order bits.
 
-- **Logic Modes**: When S₁S₀ = 01, 10, or 11, the ALU performs AND, OR, or XOR operations respectively, with the Carry output being irrelevant for these operations.
+- **Logic Modes**: When S₁S₀ = 01, 10, or 11, the ALU performs AND, OR, or XOR operations respectively, with the Carry output being irrelevant for these operations. For this reason the truth table shown on "Submit" checks cout only when S₁S₀ = 00 and shows it as x (don't care) for the other select codes.
 
 - **Control Signal Behavior**: The S₁S₀ control signals act as a simple instruction set, determining which arithmetic or logical operation the ALU executes.
 
@@ -94,6 +96,6 @@ _Figure 1: 1-bit Programmable ALU circuit diagram showing multiplexer-based func
 
 - **Carry Problems**: Ensure the full adder's Cout is connected to the ALU's Carry output for arithmetic operations.
 
-- **Logic Operation Errors**: Verify that A₀ and B₀ inputs are correctly connected to all logic gates (AND, OR, XOR) as well as the full adder.
+- **Logic Operation Errors**: Verify that the A and B input bits are correctly connected to all logic gates (AND, OR, XOR) as well as the full adder.
 
 - **Demo Reference**: Use the enhanced demo visualization with colored MUX input labels to verify your circuit connections match the intended design.

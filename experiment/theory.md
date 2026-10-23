@@ -15,6 +15,8 @@ An Arithmetic Logic Unit (ALU) is a fundamental digital circuit that performs ar
 
 _Figure 1: Programmable 1-bit ALU circuit showing multiplexer-based function selection and arithmetic/logic components. Reference: Circuit implementation_
 
+The figure shows the four operation blocks (AND, OR, XOR and the adder) feeding the 4:1 multiplexer, but it does not number the multiplexer inputs and it labels the output F₀ and the carry input C₀. In the simulation these are called F (or Output) and Cin, and the multiplexer inputs are numbered as described below: I₀ is the adder, I₁ the AND gate, I₂ the OR gate and I₃ the XOR gate.
+
 In this experiment, we design a programmable 1-bit ALU capable of performing 4 different arithmetic and logic functions on 1-bit operands. The circuit consists of carefully selected components that work together to provide multiple computational capabilities.
 
 #### Circuit Components
@@ -27,12 +29,14 @@ In this experiment, we design a programmable 1-bit ALU capable of performing 4 d
 
 #### ALU Function Table
 
-| S₁  | S₀  | ALU Function | Carry Output | Result Description |
-| --- | --- | ------------ | ------------ | ------------------ |
-| 0   | 0   | Addition     | Carry        | (A + B) mod 2      |
-| 0   | 1   | AND          | -            | A · B              |
-| 1   | 0   | OR           | -            | A + B              |
-| 1   | 1   | XOR          | -            | A ⊕ B              |
+| S₁  | S₀  | ALU Function | Carry Output (Cout)  | Result F                    |
+| --- | --- | ------------ | -------------------- | --------------------------- |
+| 0   | 0   | Addition     | Carry of A + B + Cin | (A + B + Cin) mod 2 = Sum   |
+| 0   | 1   | AND          | - (not used)         | A · B                       |
+| 1   | 0   | OR           | - (not used)         | A + B                       |
+| 1   | 1   | XOR          | - (not used)         | A ⊕ B                       |
+
+The sign "-" means that Cout has no meaning for that operation. The full adder always produces a carry, but it is the result of the addition only when S₁S₀ = 00.
 
 #### Understanding Multiplexer Input Selection
 
@@ -51,17 +55,23 @@ The 4-to-1 multiplexer is the key component that enables the ALU's programmable 
 
 **Function Selection**: The multiplexer selects the output based on S₁S₀:
 
-- **Addition (S₁S₀ = 00)**: Sum = A ⊕ B ⊕ Cin, Carry = AB + BCin + CinA
-- **AND Operation (S₁S₀ = 01)**: Result = A · B
-- **OR Operation (S₁S₀ = 10)**: Result = A + B
-- **XOR Operation (S₁S₀ = 11)**: Result = A ⊕ B
+- **Addition (S₁S₀ = 00)**: F = Sum = A ⊕ B ⊕ Cin, and Cout = AB + BCin + CinA
+- **AND Operation (S₁S₀ = 01)**: F = A · B
+- **OR Operation (S₁S₀ = 10)**: F = A + B
+- **XOR Operation (S₁S₀ = 11)**: F = A ⊕ B
+
+Combining the four cases, the output of the ALU is
+
+**F = S₁'S₀'(A ⊕ B ⊕ Cin) + S₁'S₀(A · B) + S₁S₀'(A + B) + S₁S₀(A ⊕ B)**
+
+where ' denotes the complement.
 
 #### Key Features
 
 - **Programmable Operation**: Function select lines S₁S₀ determine which operation is performed
 - **Multiple Data Paths**: Separate circuits for arithmetic and logical operations
 - **Multiplexed Output**: Single output line carries result of selected operation
-- **Carry Generation**: Addition mode produces both sum and carry outputs
+- **Carry Generation**: Addition mode produces both the sum (F) and the carry (Cout). The carry output is taken directly from the full adder, so it is meaningful only when addition is selected
 - **Compact Design**: Efficient use of basic logic gates and multiplexer
 
 #### Truth Tables for 1-bit ALU Operations
@@ -118,7 +128,7 @@ The 4-to-1 multiplexer is the key component that enables the ALU's programmable 
 
 - Only 1-bit operations
 - Limited function set (4 operations)
-- No status flag generation
+- The only status output is the carry; there are no zero, overflow or negative flags
 - Cannot handle complex arithmetic (multiplication, division)
 
 #### Scaling to Multi-bit ALUs
