@@ -56,7 +56,18 @@
                 </li>
                 <li>
                   You can set the input bits, which are by default 1, to any
-                  values of your choice for testing, by double-clicking on them.
+                  values of your choice for testing, by clicking on them. Each
+                  click toggles the bit between 1 and 0.
+                </li>
+                <li>
+                  A single output point can drive several inputs: drag a new
+                  wire from an output point that is already connected to
+                  connect it to another component. A wire can be dragged from
+                  an output point to an input point, or the other way round.
+                </li>
+                <li>
+                  To delete a wire, right click on it and select the delete
+                  option.
                 </li>
                 <li>
                   Click on the "Simulate" button after setting the input bits as
@@ -72,7 +83,11 @@
                   Clicking on "Submit" will display a "Success" or "Failure"
                   message in the Observations Section according to the
                   correctness of your circuit. It will also display a Truth
-                  Table verifying your circuit for different input values.
+                  Table verifying your circuit for all the combinations of the
+                  inputs. The truth table is shown only when every component
+                  is connected. Cout is checked only when the addition is
+                  selected (S1S0 = 00), so it is shown as x for the other
+                  operations.
                 </li>
               </ul>
               <b style="font-size: 1.1rem"
@@ -93,15 +108,7 @@
           <div class="v-datalist-row components-list" id="toolbar">
             <div class="component-button and" onclick="addGate(event)">AND</div>
             <div class="component-button or" onclick="addGate(event)">OR</div>
-            <div class="component-button not" onclick="addGate(event)">NOT</div>
-            <div class="component-button nand" onclick="addGate(event)">
-              NAND
-            </div>
-            <div class="component-button nor" onclick="addGate(event)">NOR</div>
             <div class="component-button xor" onclick="addGate(event)">XOR</div>
-            <div class="component-button xnor" onclick="addGate(event)">
-              XNOR
-            </div>
             <div
               class="component-button fulladder"
               onclick="addFA(event)"

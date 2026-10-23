@@ -43,19 +43,34 @@
             >
               <ul style="list-style: disc">
                 <li>
-                  <b>Start</b>- Starts the simulation after the inputs are
-                  properly selected. Default speed is 1x.
+                  The input bits A, B, Cin, S1 and S0 start at 0. Click on an
+                  input bit to toggle its value between 0 and 1. S1 is the most
+                  significant bit and S0 the least significant bit of the
+                  select lines of the multiplexer.
                 </li>
-                <li>Select the speed through dropdown menu</li>
                 <li>
-                  The default speed is reset to x1 automatically at the
-                  beginning of every simulation or whenever you pause and
-                  resume. If you want to change the speed, you can do so only
-                  while the simulation is running (only after starting or after
-                  resuming the simulation).
+                  The multiplexer inputs are labeled with their number and the
+                  select code that chooses them: I₀(00) is the sum of the full
+                  adder, I₁(01) is the AND gate, I₂(10) is the OR gate and
+                  I₃(11) is the XOR gate.
                 </li>
-                <li><b>Reset</b> - Resets the simulation</li>
-                <li>Click on the green input bits to set their values.</li>
+                <li>
+                  <b>Start</b> - Starts the simulation for the selected inputs.
+                  While it runs, the same button pauses and resumes it.
+                </li>
+                <li>
+                  Select the speed (1x, 2x or 4x) from the dropdown menu, before
+                  or during the simulation.
+                </li>
+                <li>
+                  When the simulation finishes, the outputs F and Cout are
+                  shown. Change the inputs and click on <b>Start</b> again to
+                  try another combination.
+                </li>
+                <li>
+                  <b>Reset</b> - Resets the simulation and sets all the inputs
+                  back to 0.
+                </li>
               </ul>
             </div>
           </div>
@@ -172,7 +187,7 @@
               cx="550"
               cy="120"
               r="10"
-              onclick="appendInputS2()"
+              onclick="appendInputS0()"
               class="color-green"
             />
             <!-- from A0 to full-adder -->

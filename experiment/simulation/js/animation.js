@@ -5,7 +5,7 @@ window.appendInputA = appendInputA;
 window.appendInputB = appendInputB;
 window.appendInputCin = appendInputCin;
 window.appendInputS1 = appendInputS1;
-window.appendInputS2 = appendInputS2;
+window.appendInputS0 = appendInputS0;
 window.simulationStatus = simulationStatus;
 window.restartCircuit = restartCircuit;
 window.setSpeed=setSpeed;
@@ -156,56 +156,69 @@ function allDisappear() {
     }
 }
 
-function appendInputA() {
-    if (textInput[0].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(45,115,0,0);
+// returns true if the inputs can be changed; a finished simulation is rewound so that new inputs can be tried
+function inputsEditable() {
+    if (timeline.progress() === 1) {
+        rewind();
     }
-    else if (textInput[0].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(45,115,0,0);
+    if (timeline.progress() !== 0) {
+        observ.innerHTML = "Inputs cannot be changed while the simulation is running. Please click on Reset to change them.";
+        return false;
     }
+    return true;
+}
+
+// colours the dots of every input as per the value of that input
+function inputDotColours() {
     for(let i=0;i<4;i++){
         setter(textInput[0].textContent,dots[i]);
-    }
-}
-function appendInputB() {
-    if (textInput[1].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(95,115,1,1);
-    }
-    else if (textInput[1].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(95,115,1,1);
     }
     for(let i=4;i<8;i++){
         setter(textInput[1].textContent,dots[i]);
     }
+    setter(textInput[2].textContent,dots[8]);
+    setter(textInput[3].textContent,dots[9]);
+    setter(textInput[4].textContent,dots[10]);
+}
+
+// toggles the value of an input bit between 0 and 1
+function toggleInput(index,coordinateX,coordinateY) {
+    if (!inputsEditable()) {
+        return;
+    }
+    if (textInput[index].textContent !== "0") {
+        changeto0(coordinateX,coordinateY,index,index);
+    }
+    else {
+        changeto1(coordinateX,coordinateY,index,index);
+    }
+    inputDotColours();
+}
+
+// sets all the inputs to 0 so that the simulation can be started right away
+function initInputs() {
+    textIOInit();
+    appendInputA();
+    appendInputB();
+    appendInputCin();
+    appendInputS1();
+    appendInputS0();
+}
+
+function appendInputA() {
+    toggleInput(0,45,115);
+}
+function appendInputB() {
+    toggleInput(1,95,115);
 }
 function appendInputCin() {
-    if (textInput[2].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(245,115,2,2);
-    }
-    else if (textInput[2].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(245,115,2,2);
-    }
-    setter(textInput[2].textContent,dots[8]);
+    toggleInput(2,245,115);
 }
-
 function appendInputS1() {
-    if (textInput[3].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(515,125,3,3);
-    }
-    else if (textInput[3].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(515,125,3,3);
-    }
-    setter(textInput[3].textContent,dots[9]);
+    toggleInput(3,515,125);
 }
-
-function appendInputS2() {
-    if (textInput[4].textContent !== "0" && timeline.progress() === 0) {
-        changeto0(545,125,4,4);
-    }
-    else if (textInput[4].textContent !== "1" && timeline.progress() === 0) {
-        changeto1(545,125,4,4);
-    }
-    setter(textInput[4].textContent,dots[10]);
+function appendInputS0() {
+    toggleInput(4,545,125);
 }
 
 function changeto1(coordinateX,coordinateY,object,textObject) {
@@ -265,15 +278,35 @@ function outputSetter(){
     setter(textOutput[1].textContent,objects[6]);
 }
 
-function display() {
+// description of the operation selected by S1 S0
+const OPERATIONS = [
+    "addition, so F is the sum bit of A + B + Cin",
+    "AND, so F = A . B",
+    "OR, so F = A + B",
+    "XOR, so F = A xor B"
+];
 
-    observ.innerHTML = "Simulation has finished. Please click on Reset and repeat the instructions given to start again."
+function display() {
+    decide = false;
+    status.innerHTML = "Start";
+    const a = parseInt(textInput[0].textContent);
+    const b = parseInt(textInput[1].textContent);
+    const cin = parseInt(textInput[2].textContent);
+    const select = parseInt(textInput[3].textContent) * 2 + parseInt(textInput[4].textContent);
+    observ.innerHTML = `Simulation has finished.<br>A = ${a}, B = ${b}, Cin = ${cin}, S1 S0 = ${textInput[3].textContent}${textInput[4].textContent}<br>The multiplexer selects ${OPERATIONS[select]}: F = ${textOutput[1].textContent}.<br>Cout = ${textOutput[0].textContent} (the carry of the full adder; it is meaningful only for addition).<br>Click on an input to change it and then click on Start to simulate again.`;
 }
 
-function reboot() {
-    for(const text of textInput){
-        text.textContent = 2;
-    }
+// takes the timeline back to the beginning while keeping the selected input values
+function rewind() {
+    timeline.seek(0);
+    timeline.pause();
+    inputDotDisappear();
+    inputDotColours();
+    outputDisappear();
+    fillColor(objects[5],"#008000");
+    fillColor(objects[6],"#008000");
+    decide = false;
+    status.innerHTML = "Start";
 }
 
 function setter(value, component) {
@@ -286,8 +319,8 @@ function setter(value, component) {
 }
 
 function setSpeed(speed) {
+    timeline.timeScale(parseInt(speed));
     if (circuitStarted) {
-        timeline.timeScale(parseInt(speed));
         observ.innerHTML = `${speed}x speed`;
     }
 }
@@ -299,12 +332,12 @@ function restartCircuit() {
     timeline.seek(0);
     timeline.pause();
     allDisappear();
-    reboot();
-    clearObservation();
+    initInputs();
     decide = false;
     status.innerHTML = "Start";
     observ.innerHTML = "Successfully restored";
     speed.selectedIndex = 0;
+    timeline.timeScale(1);
 }
 
 function simulationStatus() {
@@ -322,32 +355,21 @@ function stopCircuit() {
         observ.innerHTML = "Simulation has been Paused. Please click on the 'Start' button to Resume.";
         decide = false;
         status.innerHTML = "Start";
-        speed.selectedIndex = 0;
-    }
-    else if (timeline.progress() === 1) {
-        observ.innerHTML = "Please Restart the simulation";
     }
 }
 function startCircuit() {
-    for(const text of textInput){
-        if (text.textContent === "2") {
-            observ.innerHTML = "Please set the input values";
-            return;
-        }
+    if (timeline.progress() === 1) {
+        rewind();
     }
     if (timeline.progress() !== 1) {
         if (!circuitStarted) {
             circuitStarted = true;
         }
         timeline.play();
-        timeline.timeScale(1);
+        timeline.timeScale(parseInt(speed.value));
         observ.innerHTML = "Simulation has started.";
         decide = true;
         status.innerHTML = "Pause";
-        speed.selectedIndex = 0;
-    }
-    else if (timeline.progress() === 1) {
-        observ.innerHTML = "Please Restart the simulation";
     }
 }
 
@@ -368,7 +390,6 @@ timeline.add(partialDotAppear, 12);
 timeline.add(fullStage,21);
 timeline.add(outputSetter,26);
 timeline.add(outputVisible,27);
-timeline.eventCallback("onComplete", outputVisible);
 timeline.eventCallback("onComplete", display);
 timeline.to(dots[0], {
     motionPath: {
@@ -616,3 +637,4 @@ timeline.to(dots[10], {
 }, 0);
 timeline.pause();
 inputDotDisappear();
+initInputs();

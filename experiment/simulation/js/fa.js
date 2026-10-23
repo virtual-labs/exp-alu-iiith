@@ -188,13 +188,13 @@ export function deleteFA(id) {
       continue;
     }
     if (fullAdder[key].a0[0] === fa) {
-      fullAdder[key].a0 = null;
+      fullAdder[key].a0 = [];
     }
     if (fullAdder[key].b0[0] === fa) {
-      fullAdder[key].b0 = null;
+      fullAdder[key].b0 = [];
     }
     if (fullAdder[key].cin[0] === fa) {
-      fullAdder[key].cin = null;
+      fullAdder[key].cin = [];
     }
     if (fullAdder[key].outCout.includes(fa)) {
       fullAdder[key].removeoutCout(fa);
@@ -205,22 +205,22 @@ export function deleteFA(id) {
   }
   for (let key in mux) {
     if (mux[key].i0[0] === fa) {
-      mux[key].i0 = null;
+      mux[key].i0 = [];
     }
     if (mux[key].i1[0] === fa) {
-      mux[key].i1 = null;
+      mux[key].i1 = [];
     }
     if (mux[key].i2[0] === fa) {
-      mux[key].i2 = null;
+      mux[key].i2 = [];
     }
     if (mux[key].i3[0] === fa) {
-      mux[key].i3 = null;
+      mux[key].i3 = [];
     }
     if (mux[key].s0[0] === fa) {
-      mux[key].s0 = null;
+      mux[key].s0 = [];
     }
     if (mux[key].s1[0] === fa) {
-      mux[key].s1 = null;
+      mux[key].s1 = [];
     }
 
     if (mux[key].outputs.includes(fa)) {

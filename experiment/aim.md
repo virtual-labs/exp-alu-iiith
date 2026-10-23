@@ -1,4 +1,4 @@
-The aim of this experiment is to understand and implement an Arithmetic Logic Unit (ALU) - a fundamental component that performs arithmetic and logical operations in digital systems.
+The aim of this experiment is to design and verify a programmable 1-bit Arithmetic Logic Unit (ALU) that performs addition, AND, OR and XOR on two 1-bit operands, with the operation chosen by two select lines S₁S₀ through a 4-to-1 multiplexer.
 
 ### Prerequisites:
 
@@ -16,11 +16,12 @@ Through this interactive experiment, you will:
 
 - **Understand the fundamentals** of ALU design and operation in digital circuits
 - **Apply multiplexer knowledge** to understand how control signals select different ALU operations
-- **Design and analyze** a programmable 1-bit ALU with multiple function capabilities
-- **Implement various operations** including arithmetic (addition, subtraction) and logical operations (AND, OR, XOR, NOT)
-- **Explore function selection** using control signals and multiplexer-based operation switching
-- **Build complete ALU systems** that form the foundation of processor arithmetic units
+- **Design and analyze** a programmable 1-bit ALU with four functions
+- **Implement four operations**: one arithmetic operation (addition, using a full adder) and three logical operations (AND, OR, XOR)
+- **Explore function selection** using the select lines S₁S₀ and multiplexer-based operation switching
+- **Verify the ALU** by comparing its output F and carry output Cout with the expected truth table
 - **Connect theoretical MUX understanding** to practical ALU implementation and operation
+- **See how a 1-bit ALU is extended** to a multi-bit ALU (this extension is described in the theory but not built in the experiment)
 
 ### ALU Symbol and Interface:
 
@@ -31,11 +32,13 @@ Through this interactive experiment, you will:
 - **A, B**: Data input operands (the two values to be operated on)
 - **F**: Function select inputs (control signals that determine which operation to perform)
 - **R**: Result output (the output of the selected arithmetic or logical operation)
-- **D**: Additional control or status signals (such as carry, overflow, or zero flags)
+- **D**: Output status signals (such as carry, overflow, or zero flags)
+
+**In this experiment** the symbol is used with the following names, which are also the names on the simulation pages: the operands are **A** and **B**, the carry input is **Cin**, the function select lines are **S₁** and **S₀**, the result is **F** (shown as "Output" in the Practice task) and the status output is the carry **Cout**.
 
 ### Operations Performed:
 
-Most ALUs can perform the following operations:
+Most ALUs can perform the following operations (the ALU of this experiment performs only addition, AND, OR and XOR):
 
 - **Bitwise logic operations**: AND, NOT, OR, XOR for Boolean algebra
 - **Integer arithmetic operations**: Addition, subtraction, and sometimes multiplication and division
